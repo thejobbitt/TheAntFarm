@@ -106,6 +106,24 @@ class JobSettingsHandler:
             drill_set_od["bits_diameter"] = drill_bits_diameter_list
             self.jobs_settings_od["drill"] = drill_set_od
 
+        # Slot job related settings #
+        if "SLOT" in self.jobs_settings:
+            slot_settings = self.jobs_settings["SLOT"]
+            slot_set_od = ({})
+            slot_set_od["tool_diameter"] = slot_settings.getfloat("tool_diameter", self.TOOL_DIAMETER_DEFAULT)
+            slot_set_od["margin"] = slot_settings.getfloat("margin", self.MARGIN_DEFAULT)
+            slot_set_od["multi_depth"] = slot_settings.getboolean("multi_depth", self.MULTI_PATH_FLAG_DEFAULT)
+            slot_set_od["depth_per_pass"] = slot_settings.getfloat("depth_per_pass", self.DEPTH_PER_PASS_DEFAULT)
+            slot_set_od["cut"] = slot_settings.getfloat("cut", self.CUT_Z_DEFAULT)
+            slot_set_od["passages"] = slot_settings.getint("passages", self.PASSAGES_DEFAULT)
+            slot_set_od["travel"] = slot_settings.getfloat("travel", self.TRAVEL_Z_DEFAULT)
+            slot_set_od["spindle"] = slot_settings.getfloat("spindle", self.SPINDLE_SPEED_DEFAULT)
+            slot_set_od["xy_feedrate"] = slot_settings.getfloat("xy_feedrate", self.XY_FEEDRATE_DEFAULT)
+            slot_set_od["z_feedrate"] = slot_settings.getfloat("z_feedrate", self.Z_FEEDRATE_DEFAULT)
+            slot_set_od["taps_type"] = slot_settings.getint("taps_type", self.TAPS_TYPE_INDEX_DEFAULT)
+            slot_set_od["taps_length"] = slot_settings.getfloat("taps_length", self.TAPS_LENGTH_DEFAULT)
+            self.jobs_settings_od["slot"] = slot_set_od
+
         if "NC_TOP" in self.jobs_settings:
             nc_top_settings = self.jobs_settings["NC_TOP"]
             nc_top_set_od = ({})
@@ -208,6 +226,23 @@ class JobSettingsHandler:
 
         for index, elem in enumerate(drill_set_od["bits_names"]):
             drill_bits_settings[elem] = str(drill_set_od["bits_diameter"][index])
+
+        # Slot job related settings #
+        self.jobs_settings["SLOT"] = {}
+        slot_settings = self.jobs_settings["SLOT"]
+        slot_set_od = job_settings_od["slot"]
+        slot_settings["tool_diameter"] = str(slot_set_od["tool_diameter"])
+        slot_settings["margin"] = str(slot_set_od["margin"])
+        slot_settings["multi_depth"] = str(slot_set_od["multi_depth"])
+        slot_settings["depth_per_pass"] = str(slot_set_od["depth_per_pass"])
+        slot_settings["cut"] = str(slot_set_od["cut"])
+        slot_settings["passages"] = str(slot_set_od["passages"])
+        slot_settings["travel"] = str(slot_set_od["travel"])
+        slot_settings["spindle"] = str(slot_set_od["spindle"])
+        slot_settings["xy_feedrate"] = str(slot_set_od["xy_feedrate"])
+        slot_settings["z_feedrate"] = str(slot_set_od["z_feedrate"])
+        slot_settings["taps_type"] = str(slot_set_od["taps_type"])
+        slot_settings["taps_length"] = str(slot_set_od["taps_length"])
 
         # No-Copper Top job related settings #
         self.jobs_settings["NC_TOP"] = {}
@@ -313,6 +348,23 @@ class JobSettingsHandler:
         self.jobs_settings["DRILL_BITS"] = {}
         drill_bits_settings = self.jobs_settings["DRILL_BITS"]
 
+        # Slot job related settings #
+        self.jobs_settings["SLOT"] = {}
+        slot_settings = self.jobs_settings["SLOT"]
+
+        slot_settings["tool_diameter"] = str(self.TOOL_DIAMETER_DEFAULT)
+        slot_settings["margin"] = str(self.MARGIN_DEFAULT)
+        slot_settings["multi_depth"] = str(self.MULTI_PATH_FLAG_DEFAULT)
+        slot_settings["depth_per_pass"] = str(self.DEPTH_PER_PASS_DEFAULT)
+        slot_settings["cut"] = str(self.CUT_Z_DEFAULT)
+        slot_settings["passages"] = str(self.PASSAGES_DEFAULT)
+        slot_settings["travel"] = str(self.TRAVEL_Z_DEFAULT)
+        slot_settings["spindle"] = str(self.SPINDLE_SPEED_DEFAULT)
+        slot_settings["xy_feedrate"] = str(self.XY_FEEDRATE_DEFAULT)
+        slot_settings["z_feedrate"] = str(self.Z_FEEDRATE_DEFAULT)
+        slot_settings["taps_type"] = str(self.TAPS_TYPE_INDEX_DEFAULT)
+        slot_settings["taps_length"] = str(self.TAPS_LENGTH_DEFAULT)
+        
         # No-Copper Top job related settings #
         self.jobs_settings["NC_TOP"] = {}
         nc_top_settings = self.jobs_settings["NC_TOP"]

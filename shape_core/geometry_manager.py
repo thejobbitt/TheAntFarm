@@ -1,7 +1,7 @@
 import time
 import pyclipper as pc
 import shapely.geometry as shg
-from shapely.ops import cascaded_union
+from shapely.ops import unary_union, cascaded_union
 
 # from .plot_stuff import plot_polygons, plot_shapely
 from .pyclipper2shapely import polytree_to_shapely
@@ -375,7 +375,7 @@ def merge_polygons(mp):
 
     merged_final = []
     tmp_p = [m.geom for m in merged]
-    tmp_final = cascaded_union(tmp_p)
+    tmp_final = unary_union(tmp_p) #tmp_final = cascaded_union(tmp_p) #cascaded deprecated, didnt compare the funtions
     if tmp_final.geom_type == "MultiPolygon":
         for f in tmp_final:
             tmp = [f.exterior.coords]

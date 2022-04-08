@@ -22,26 +22,46 @@ class UiViewLoadLayerTab(QObject):
         self.lay_names = lay_names
         self.app_settings = app_settings
 
-        lay_colors = [app_settings.top_layer_color, app_settings.bottom_layer_color,
-                      app_settings.profile_layer_color, app_settings.drill_layer_color,
-                      app_settings.nc_top_layer_color, app_settings.nc_bottom_layer_color]
-
+        lay_colors = [app_settings.top_layer_color, 
+                        app_settings.bottom_layer_color,
+                        app_settings.profile_layer_color, 
+                        app_settings.drill_layer_color,
+                        app_settings.slot_layer_color,
+                        app_settings.nc_top_layer_color, 
+                        app_settings.nc_bottom_layer_color]
         self.layer_colors = Od([(k, v) for k, v in zip(self.lay_tags, lay_colors)])
-        self.L_TEXT = [self.ui.top_file_le, self.ui.bottom_file_le, self.ui.profile_file_le,
-                       self.ui.drill_file_le, self.ui.no_copper_1_le, self.ui.no_copper_2_le]
+        
+        self.L_TEXT = [self.ui.top_file_le, 
+                        self.ui.bottom_file_le, 
+                        self.ui.profile_file_le,
+                        self.ui.drill_file_le,
+                        self.ui.slot_file_le,
+                        self.ui.no_copper_1_le, 
+                        self.ui.no_copper_2_le]
         self.layers_te = Od([(k, t) for k, t in zip(self.lay_tags, self.L_TEXT)])
-        self.L_CHECKBOX = [self.ui.top_view_chb, self.ui.bottom_view_chb, self.ui.profile_view_chb,
-                           self.ui.drill_view_chb, self.ui.no_copper_1_chb, self.ui.no_copper_2_chb]
+        
+        self.L_CHECKBOX = [self.ui.top_view_chb,
+                        self.ui.bottom_view_chb,
+                        self.ui.profile_view_chb,
+                        self.ui.drill_view_chb,
+                        self.ui.slot_view_chb,
+                        self.ui.no_copper_1_chb,
+                        self.ui.no_copper_2_chb]
         self.layers_chb = Od([(k, t) for k, t in zip(self.lay_tags, self.L_CHECKBOX)])
-
+    
+        # Top Bottom display events
         self.ui.pushButton_3.clicked.connect(self.vis_layer.top_view)
         self.ui.pushButton_4.clicked.connect(self.vis_layer.bottom_view)
 
-        # Load Layer TAB related controls.
+        # Connect slot and signal
         self.load_layer_s.connect(self.controlWo.load_new_layer)
         self.controlWo.update_layer_s.connect(self.visualize_new_layer)
+
+        # Accepted file types
         gerber_extensions = "Gerber (*.gbr *.GBR *.gbl *.GBL *.gtl *.GTL)"
         excellon_extensions = "Excellon (*.xln *.XLN *.drl *.DRL)"
+
+        # Open file pushbutton event
         self.ui.top_load_pb.clicked.connect(
             lambda: self.load_gerber_file(self.lay_tags[0], "Load Top Gerber File", gerber_extensions))
         self.ui.bottom_load_pb.clicked.connect(
@@ -50,10 +70,14 @@ class UiViewLoadLayerTab(QObject):
             lambda: self.load_gerber_file(self.lay_tags[2], "Load Profile Gerber File", gerber_extensions))
         self.ui.drill_load_pb.clicked.connect(
             lambda: self.load_gerber_file(self.lay_tags[3], "Load Drill Excellon File", excellon_extensions))
+        self.ui.slot_load_pb.clicked.connect(
+            lambda: self.load_gerber_file(self.lay_tags[4], "Load Slot Gerber File", gerber_extensions))
         self.ui.no_copper_1_pb.clicked.connect(
-            lambda: self.load_gerber_file(self.lay_tags[4], "Load No Copper TOP Gerber File", gerber_extensions))
+            lambda: self.load_gerber_file(self.lay_tags[5], "Load No Copper TOP Gerber File", gerber_extensions))
         self.ui.no_copper_2_pb.clicked.connect(
-            lambda: self.load_gerber_file(self.lay_tags[5], "Load No Copper BOTTOM Gerber File", gerber_extensions))
+            lambda: self.load_gerber_file(self.lay_tags[6], "Load No Copper BOTTOM Gerber File", gerber_extensions))
+       
+        # View checkbox event
         self.ui.top_view_chb.stateChanged.connect(
             lambda: self.set_layer_visible(self.lay_tags[0], self.ui.top_view_chb.isChecked()))
         self.ui.bottom_view_chb.stateChanged.connect(
@@ -62,10 +86,14 @@ class UiViewLoadLayerTab(QObject):
             lambda: self.set_layer_visible(self.lay_tags[2], self.ui.profile_view_chb.isChecked()))
         self.ui.drill_view_chb.stateChanged.connect(
             lambda: self.set_layer_visible(self.lay_tags[3], self.ui.drill_view_chb.isChecked()))
+        self.ui.slot_view_chb.stateChanged.connect(
+            lambda: self.set_layer_visible(self.lay_tags[4], self.ui.slot_view_chb.isChecked()))
         self.ui.no_copper_1_chb.stateChanged.connect(
-            lambda: self.set_layer_visible(self.lay_tags[4], self.ui.no_copper_1_chb.isChecked()))
+            lambda: self.set_layer_visible(self.lay_tags[5], self.ui.no_copper_1_chb.isChecked()))
         self.ui.no_copper_2_chb.stateChanged.connect(
-            lambda: self.set_layer_visible(self.lay_tags[5], self.ui.no_copper_2_chb.isChecked()))
+            lambda: self.set_layer_visible(self.lay_tags[6], self.ui.no_copper_2_chb.isChecked()))
+
+        # View all or none checkbox event
         self.ui.all_view_chb.stateChanged.connect(lambda: self.hide_show_layers(self.ui.all_view_chb.isChecked()))
         self.ui.clear_views_pb.clicked.connect(self.remove_all_vis_layers)
 

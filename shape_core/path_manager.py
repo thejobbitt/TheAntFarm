@@ -211,6 +211,8 @@ class MachinePath:
         elif machining_type == 'drill':
             # self.cfg = {'tool_diameter': 1.0, 'bits_diameter': [1.0, 0.8, 0.6, 0.4]}
             self.cfg = {'tool_diameter': None, 'bits_diameter': [0.8], 'optimize': False}
+        elif machining_type == 'slot':
+            self.cfg = {'tool_diameter': 1.0, 'margin': 0.1, 'taps_type': 3, 'taps_length': 1.0}
         else:
             self.cfg = {}
         self.type = machining_type
@@ -235,6 +237,8 @@ class MachinePath:
             self.execute_profile()
         elif self.type == 'pocketing':
             elabs = self.execute_pocketing()
+        elif self.type == 'slot':
+            self.execute_slot()
         elif self.type == 'drill':
             # if there is a valid pocketing tool
             # the pocketing process is performed
@@ -516,6 +520,83 @@ class MachinePath:
 
         t_d = self.cfg['tool_diameter']
         self.path = [((t_d, "profile"), path)]
+
+    def execute_slot(self):
+        # to compute the profile path, the external perimeter of the board need to be
+        # detected. The perimeter of the geom that contains all the other geom
+        # will be chose as profile perimeter.
+        # If the external geom is unique its holes will be considered otherwise multiple external
+        # geoms are present, their perimeters will be considered as contours of holes
+
+        t0 = time.time()
+        og_list = []
+        prev_poly = [g.geom for g in self.geom_list]
+        td = self.cfg['tool_diameter'] * self.TD_COEFF
+        # uniqueness check of the profile
+        if len(self.geom_list) == 1:
+            # unique profile
+            ext_path = offset_polygon(fill_holes_sh(self.geom_list[0].geom), self.cfg['margin'], shapely_poly=True)
+            if ext_path is not None:
+                og_list.append(ext_path)
+        else:
+            # profile composed by multiple polygons
+            # to identify the external profile I calculate the areas of the bboxes of each polygon.
+            # the polygon with the largest bbox will be the outer one.
+            geoms = [g.geom for g in self.geom_list]
+            bba = get_bbox_area_sh(geoms.pop(0))
+            id = 0
+
+            for i, p in enumerate(geoms):
+                a = get_bbox_area_sh(p)
+                if a > bba:
+                    bba = a
+                    id = i + 1
+
+            # id contains the index of the polygon with biggest bbox
+            # todo: check, are all the remaining polygons contained in the biggest one?
+
+            ext_p = self.geom_list[id]
+            ext_path = offset_polygon(fill_holes_sh(ext_p.geom), self.cfg['margin'], shapely_poly=True)
+            if ext_path is not None:
+                og_list.append(ext_path)
+
+            for i, g in enumerate(self.geom_list):
+                if i != id:
+                    og = offset_polygon_holes(g, - (self.cfg['margin']))
+                    if og is not None:
+                        og_list.append(og)
+
+        t1 = time.time()
+        print("Path Generation Done in " + str(t1-t0) + " sec")
+
+        # extracting linestring from the polygon path
+        path = []
+        for g in og_list:
+            ex_path = g.exterior
+            if ex_path.type == "LinearRing" or ex_path.type == "LineString":
+                path.append(ex_path)
+            for i in g.interiors:
+                if ex_path.type == "LinearRing" or ex_path.type == "LineString":
+                    path.append(i)
+
+        # add taps
+        # based on the selected tap strategy
+        t = Gapper(path[0], self.cfg)
+        stl = t.get_available_strategies()
+        st = stl[self.cfg["taps_type"]]
+        print("Strategy")
+        print(st)
+        new_ext = t.add_taps_on_external_path(strategy=st)
+        path.pop(0)
+        path = new_ext + path
+
+        # todo: add the option to make tap for the perimeter holes
+        # I was thinking of something that would put at least 2 gaps
+        # in case the hole had a perimeter greater than a fixed parameter such as 30mm
+        # parameter could be set by GUI or settings page
+
+        t_d = self.cfg['tool_diameter']
+        self.path = [((t_d, "slot"), path)]
 
     def _subpath_execute(self, ppg_list):
 

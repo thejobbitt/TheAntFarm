@@ -32,6 +32,7 @@ class UiCreateJobLayerTab(QObject):
         header = self.ui.drill_tw.horizontalHeader()
         header.setSectionResizeMode(1, QHeaderView.Stretch)
         [self.ui.profile_taps_layout_cb.addItem(x) for x in self.TAPS_TYPE_TEXT]
+        [self.ui.slot_taps_layout_cb.addItem(x) for x in self.TAPS_TYPE_TEXT]
 
         self.ui.layer_choice_cb.currentIndexChanged.connect(self.change_job_page)
         self.ui.add_drill_tool_tb.clicked.connect(self.add_default_drill_tool)
@@ -41,6 +42,7 @@ class UiCreateJobLayerTab(QObject):
         self.ui.bottom_generate_job_pb.clicked.connect(self.generate_bottom_path)
         self.ui.profile_generate_job_pb.clicked.connect(self.generate_profile_path)
         self.ui.drill_generate_job_pb.clicked.connect(self.generate_drill_path)
+        self.ui.slot_generate_job_pb.clicked.connect(self.generate_slot_path)
 
         self.generate_path_s.connect(self.control_wo.generate_new_path)
         self.control_wo.update_path_s.connect(self.add_new_path)
@@ -178,6 +180,23 @@ class UiCreateJobLayerTab(QObject):
         else:
             self.ui.drill_optimization_chb.setCheckState(Qt.Unchecked)
 
+    def set_settings_per_slot(self):
+        settings_slot = self.jobs_settings.jobs_settings_od["slot"]
+        self.ui.slot_tool_diameter_dsb.setValue(settings_slot["tool_diameter"])
+        self.ui.slot_margin_dsb.setValue(settings_slot["margin"])
+        if settings_slot["multi_depth"]:
+            self.ui.slot_multi_depth_chb.setCheckState(Qt.Checked)
+        else:
+            self.ui.slot_multi_depth_chb.setCheckState(Qt.Unchecked)
+        self.ui.slot_depth_pass_dsb.setValue(settings_slot["depth_per_pass"])
+        self.ui.slot_cut_z_dsb.setValue(settings_slot["cut"])
+        self.ui.slot_travel_z_dsb.setValue(settings_slot["travel"])
+        self.ui.slot_spindle_speed_dsb.setValue(settings_slot["spindle"])
+        self.ui.slot_xy_feed_rate_dsb.setValue(settings_slot["xy_feedrate"])
+        self.ui.slot_z_feed_rate_dsb.setValue(settings_slot["z_feedrate"])
+        self.ui.slot_taps_layout_cb.setCurrentIndex(settings_slot["taps_type"])
+        self.ui.slot_tap_size_dsb.setValue(settings_slot["taps_length"])
+
     def set_settings_per_nc_top(self):
         settings_nc_top = self.jobs_settings.jobs_settings_od["no_copper_top"]
         self.ui.nc_top_tool_diameter_dsb.setValue(settings_nc_top["tool_diameter"])
@@ -208,8 +227,10 @@ class UiCreateJobLayerTab(QObject):
         elif tag == self.lay_tags[3]:
             return self.set_settings_per_drill()
         elif tag == self.lay_tags[4]:
-            return self.set_settings_per_nc_top()
+            return self.set_settings_per_slot()
         elif tag == self.lay_tags[5]:
+            return self.set_settings_per_nc_top()
+        elif tag == self.lay_tags[6]:
             return self.set_settings_per_nc_bottom()
 
     def set_all_settings_per_page(self):
@@ -283,6 +304,26 @@ class UiCreateJobLayerTab(QObject):
         logging.debug(settings_drill)
         return settings_drill
 
+    def get_settings_per_slot(self):
+        settings_slot = Od({})
+        settings_slot["tool_diameter"] = self.ui.slot_tool_diameter_dsb.value()
+        settings_slot["margin"] = self.ui.slot_margin_dsb.value()
+        settings_slot["multi_depth"] = self.ui.slot_multi_depth_chb.isChecked()
+        settings_slot["depth_per_pass"] = self.ui.slot_depth_pass_dsb.value()
+        settings_slot["cut"] = self.ui.slot_cut_z_dsb.value()
+        settings_slot["passages"] = 1
+        if settings_slot["multi_depth"]:
+            settings_slot["passages"] = math.ceil(abs(settings_slot["cut"]/settings_slot["depth_per_pass"]))
+        settings_slot["overlap"] = 1.0
+        settings_slot["travel"] = self.ui.slot_travel_z_dsb.value()
+        settings_slot["spindle"] = self.ui.slot_spindle_speed_dsb.value()
+        settings_slot["xy_feedrate"] = self.ui.slot_xy_feed_rate_dsb.value()
+        settings_slot["z_feedrate"] = self.ui.slot_z_feed_rate_dsb.value()
+        settings_slot["taps_type"] = self.ui.slot_taps_layout_cb.currentIndex()
+        settings_slot["taps_length"] = self.ui.slot_tap_size_dsb.value()
+        logging.debug(settings_slot)
+        return settings_slot
+
     def get_settings_per_nc_top(self):
         settings_nc_top = Od({})
         settings_nc_top["tool_diameter"] = self.ui.nc_top_tool_diameter_dsb.value()
@@ -317,8 +358,10 @@ class UiCreateJobLayerTab(QObject):
         elif tag == self.lay_tags[3]:
             return self.get_settings_per_drill()
         elif tag == self.lay_tags[4]:
-            return self.get_settings_per_nc_top()
+            return self.get_settings_per_slot()
         elif tag == self.lay_tags[5]:
+            return self.get_settings_per_nc_top()
+        elif tag == self.lay_tags[6]:
             return self.get_settings_per_nc_bottom()
 
     def get_all_settings(self):
@@ -329,6 +372,7 @@ class UiCreateJobLayerTab(QObject):
         settings[self.lay_tags[3]] = self.get_settings_per_page(self.lay_tags[3])
         settings[self.lay_tags[4]] = self.get_settings_per_page(self.lay_tags[4])
         settings[self.lay_tags[5]] = self.get_settings_per_page(self.lay_tags[5])
+        settings[self.lay_tags[6]] = self.get_settings_per_page(self.lay_tags[6])
         return settings
 
     def generate_top_path(self):
@@ -346,6 +390,10 @@ class UiCreateJobLayerTab(QObject):
     def generate_drill_path(self):
         cfg = self.get_settings_per_page("drill")
         self.generate_path_s.emit("drill", cfg, "drill")
+
+    def generate_slot_path(self):
+        cfg = self.get_settings_per_page("slot")
+        self.generate_path_s.emit("slot", cfg, "slot")
 
     @Slot(str, list)
     def add_new_path(self, tag, path):

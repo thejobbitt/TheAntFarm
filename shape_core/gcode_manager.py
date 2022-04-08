@@ -75,6 +75,7 @@ class GCoder:
                 'z_feedrate': 40.0,
                 'spindle': 1000.0
             }
+        
         elif machining_type == 'drill':
             self.cfg = {
                 'cut': -2.1,
@@ -83,6 +84,18 @@ class GCoder:
                 'z_feedrate': 40.0,
                 'spindle': 1000.0
             }
+
+        elif machining_type == 'slot':
+            self.cfg = {
+                'cut': -1.8,
+                'travel': 0.7,
+                'xy_feedrate': 250.0,
+                'z_feedrate': 40.0,
+                'spindle': 1000.0,
+                'multi_depth': True,
+                'depth_per_pass': 0.6
+            }
+            
         else:
             self.cfg = {}
         self.type = machining_type
@@ -109,6 +122,8 @@ class GCoder:
         elif self.type == 'drill':
             self.compute_drill()
         elif self.type == 'pocketing':
+            self.compute_pocketing()
+        elif self.type == 'slot':
             self.compute_pocketing()
         elif self.type == 'commander':
             print("Nothing to do!")

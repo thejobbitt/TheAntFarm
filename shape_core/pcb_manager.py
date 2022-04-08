@@ -16,7 +16,7 @@ from .geometry_manager import Geom, merge_polygons
 
 class PcbObj:
 
-    GBR_KEYS = ["top", "bottom", "profile"]
+    GBR_KEYS = ["top", "bottom", "profile", "slot"]
     EXN_KEYS = ["drill"]
     DEFAULT_ARC_SUBDIVISIONS = 64
     MAX_ARC_CHORD_LEN = 0.5  # mm
@@ -446,16 +446,16 @@ class PcbObj:
 # -----------------------------------------------------------------------------
 
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
 
-    gerber_path = "C:\\Users\\mmatt\\Documents\\prj\\new_cnc\\cam_data\\test1\\gerbers_file\\copper_top.gbr"
-    gerber_path = "C:\\Users\\mmatt\\Documents\\prj\\new_cnc\\cam_data\\test1\\gerbers_file\\copper_bottom.gbr"
-    gerber_path = "C:\\Users\\mmatt\\Documents\\prj\\new_cnc\\cam_data\\test2\\gerbers_file\\copper_bottom.gbr"
-    gerber_path = "C:\\Users\\mmatt\\Documents\\prj\\new_cnc\\cam_data\\test2\\gerbers_file\\profile.gbr"
-    gerber_path = "C:\\Users\\mmatt\\Documents\\prj\\new_cnc\\cam_data\\test3\\gerbers_file\\JST_motor_breakout_board-F_Cu.gbr"
-    gerber_path = "C:\\Users\\mmatt\\Desktop\\Gerber\\LedKeyring-F_Cu.gbr"
+    #gerber_path = "C:\\Users\\mmatt\\Documents\\prj\\new_cnc\\cam_data\\test1\\gerbers_file\\copper_top.gbr"
+    #gerber_path = "C:\\Users\\mmatt\\Documents\\prj\\new_cnc\\cam_data\\test1\\gerbers_file\\copper_bottom.gbr"
+    #gerber_path = "C:\\Users\\mmatt\\Documents\\prj\\new_cnc\\cam_data\\test2\\gerbers_file\\copper_bottom.gbr"
+    #gerber_path = "C:\\Users\\mmatt\\Documents\\prj\\new_cnc\\cam_data\\test2\\gerbers_file\\profile.gbr"
+    #gerber_path = "C:\\Users\\mmatt\\Documents\\prj\\new_cnc\\cam_data\\test3\\gerbers_file\\JST_motor_breakout_board-F_Cu.gbr"
+    #gerber_path = "C:\\Users\\mmatt\\Desktop\\Gerber\\LedKeyring-F_Cu.gbr"
 
-    pcb = PcbObj()
-    pcb.load_gerber(gerber_path, 'top')
-    gtop = pcb.get_gerber('top')
-    pcb.get_gerber_layer('top')
+    #pcb = PcbObj()
+    #pcb.load_gerber(gerber_path, 'top')
+    #gtop = pcb.get_gerber('top')
+    #pcb.get_gerber_layer('top')

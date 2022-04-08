@@ -26,6 +26,7 @@ class AppSettingsHandler:
     TOP_LAYER_COLOR_DEFAULT = "#FFC300"
     BOTTOM_LAYER_COLOR_DEFAULT = "#A3E4D7"
     PROFILE_LAYER_COLOR_DEFAULT = "#000000"
+    SLOT_LAYER_COLOR_DEFAULT = "#000000"
     DRILL_LAYER_COLOR_DEFAULT = "#999999"
     NC_TOP_LAYER_COLOR_DEFAULT = "#800080"
     NC_BOTTOM_LAYER_COLOR_DEFAULT = "#A52A2A"
@@ -57,6 +58,7 @@ class AppSettingsHandler:
         self.top_layer_color = self.TOP_LAYER_COLOR_DEFAULT
         self.bottom_layer_color = self.BOTTOM_LAYER_COLOR_DEFAULT
         self.profile_layer_color = self.PROFILE_LAYER_COLOR_DEFAULT
+        self.slot_layer_color =  self.SLOT_LAYER_COLOR_DEFAULT
         self.drill_layer_color = self.DRILL_LAYER_COLOR_DEFAULT
         self.nc_top_layer_color = self.NC_TOP_LAYER_COLOR_DEFAULT
         self.nc_bottom_layer_color = self.NC_BOTTOM_LAYER_COLOR_DEFAULT
@@ -100,6 +102,7 @@ class AppSettingsHandler:
             self.top_layer_color = app_layers_settings.get("top_layer_color", self.TOP_LAYER_COLOR_DEFAULT)
             self.bottom_layer_color = app_layers_settings.get("bottom_layer_color", self.BOTTOM_LAYER_COLOR_DEFAULT)
             self.profile_layer_color = app_layers_settings.get("profile_layer_color", self.PROFILE_LAYER_COLOR_DEFAULT)
+            self.slot_layer_color = app_layers_settings.get("slot_layer_color", self.SLOT_LAYER_COLOR_DEFAULT)
             self.drill_layer_color = app_layers_settings.get("drill_layer_color", self.DRILL_LAYER_COLOR_DEFAULT)
             self.nc_top_layer_color = app_layers_settings.get("nc_top_layer_color", self.NC_TOP_LAYER_COLOR_DEFAULT)
             self.nc_bottom_layer_color = app_layers_settings.get("nc_bottom_layer_color",
@@ -125,6 +128,7 @@ class AppSettingsHandler:
                                         "top_layer_color": self.TOP_LAYER_COLOR_DEFAULT,
                                         "bottom_layer_color": self.BOTTOM_LAYER_COLOR_DEFAULT,
                                         "profile_layer_color": self.PROFILE_LAYER_COLOR_DEFAULT,
+                                        "slot_layer_color": self.SLOT_LAYER_COLOR_DEFAULT,
                                         "drill_layer_color": self.DRILL_LAYER_COLOR_DEFAULT,
                                         "nc_top_layer_color": self.NC_TOP_LAYER_COLOR_DEFAULT,
                                         "nc_bottom_layer_color": self.NC_BOTTOM_LAYER_COLOR_DEFAULT,
@@ -163,6 +167,7 @@ class AppSettingsHandler:
         app_layers["top_layer_color"] = self.top_layer_color
         app_layers["bottom_layer_color"] = self.bottom_layer_color
         app_layers["profile_layer_color"] = self.profile_layer_color
+        app_layers["slot_layer_color"] = self.slot_layer_color
         app_layers["drill_layer_color"] = self.drill_layer_color
         app_layers["nc_top_layer_color"] = self.nc_top_layer_color
         app_layers["nc_bottom_layer_color"] = self.nc_bottom_layer_color
@@ -192,6 +197,7 @@ class AppSettingsHandler:
                                         "top_layer_color": self.TOP_LAYER_COLOR_DEFAULT,
                                         "bottom_layer_color": self.BOTTOM_LAYER_COLOR_DEFAULT,
                                         "profile_layer_color": self.PROFILE_LAYER_COLOR_DEFAULT,
+                                        "slot_layer_color": self.SLOT_LAYER_COLOR_DEFAULT,
                                         "drill_layer_color": self.DRILL_LAYER_COLOR_DEFAULT,
                                         "nc_top_layer_color": self.NC_TOP_LAYER_COLOR_DEFAULT,
                                         "nc_bottom_layer_color": self.NC_BOTTOM_LAYER_COLOR_DEFAULT,

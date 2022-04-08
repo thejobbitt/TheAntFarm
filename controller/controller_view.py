@@ -27,6 +27,8 @@ class ViewController(QObject):
                 self.pcb.load_excellon(layer_path, layer)
                 loaded_layer = self.pcb.get_excellon_layer(layer)
                 return [loaded_layer, True]
+            if layer not in grb_tags:
+                logger.error("Layer not in Gerber Tags.")
         except (AttributeError, ValueError, ZeroDivisionError, IndexError) as e:
             logging.error(e, exc_info=True)
         except Exception as e:
@@ -34,7 +36,7 @@ class ViewController(QObject):
         return [None, None]
 
     def generate_new_path(self, tag, cfg, machining_type):
-        if machining_type == "gerber" or machining_type == "profile":
+        if machining_type == "gerber" or machining_type == "profile" or machining_type == "slot":
             machining_layer = self.pcb.get_gerber_layer(tag)
         elif machining_type == "drill":
             machining_layer = self.pcb.get_excellon_layer(tag)

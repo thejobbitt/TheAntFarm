@@ -147,7 +147,7 @@ def _polytree_to_shapely(tree, scale):
     # by the time recursion returns to the root.
     assert len(children) == 0
 
-    union = cascaded_union(polygons)
+    union = unary_union(polygons) #union = cascaded_union(polygons) #cascaded deprecated, didnt compare the funtions
     assert union.is_valid
     return union
 

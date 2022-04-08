@@ -15,8 +15,8 @@ logger = logging.getLogger(__name__)
 
 class UiManager(QObject):
     """Manage UI objects, signals and slots"""
-    L_TAGS = ("top", "bottom", "profile", "drill", "no_copper_top", "no_copper_bottom")
-    L_NAMES = ("TOP", "BOTTOM", "PROFILE", "DRILL", "NO COPPER TOP", "NO COPPER BOTTOM")
+    L_TAGS = ("top", "bottom", "profile", "drill", "slot", "no_copper_top", "no_copper_bottom")
+    L_NAMES = ("TOP", "BOTTOM", "PROFILE", "DRILL", "SLOT", "NO COPPER TOP", "NO COPPER BOTTOM")
     LOG_COLORS = {
         logging.DEBUG:    'white',
         logging.INFO:     'light blue',
@@ -52,6 +52,7 @@ class UiManager(QObject):
         self.ui.actionHide_Show_Console.triggered.connect(self.hide_show_console)
         # self.ui.actionSettings_Preferences.triggered.connect(self.hide_show_preferences_tab)
         self.ui.actionSave_Settings.triggered.connect(self.save_all_settings)
+        self.ui.actionQuit.triggered.connect(self.quit_app)
 
         self.make_log_action_mutually_exclusive()
         self.apply_initial_window_settings(self.settings.app_settings)
@@ -71,6 +72,9 @@ class UiManager(QObject):
         self.main_win.ui.ctrl_tab_widget.setCurrentIndex(app_settings.ctrl_tab_index)
         self.main_win.ui.settings_sub_tab.setCurrentIndex(app_settings.settings_tab_index)
         self.main_win.ui.actionHide_Show_Console.setChecked(app_settings.console_visibility)
+
+    def quit_app(self):
+        quit()
 
     def save_all_settings(self):
         all_settings_od = {"jobs_settings": self.ui_create_job_m.get_all_settings()}
