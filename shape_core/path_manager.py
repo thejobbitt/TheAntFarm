@@ -3,7 +3,7 @@ import time
 from shapely.geometry import Polygon, LineString, MultiLineString, Point, MultiPoint
 from shapely.ops import substring
 from collections import OrderedDict
-from .geometry_manager import merge_polygons_path, offset_polygon, offset_polygon_holes, get_bbox_area_sh, fill_holes_sh, get_poly_diameter
+from .geometry_manager import merge_polygons_path, offset_polygon, offset_polygon_holes, get_bbox_area_sh, fill_holes_sh, get_poly_max_diameter
 from .path_optimizer import Optimizer
 import numpy as np
 
@@ -267,6 +267,8 @@ class MachinePath:
         return elabs
 
     def execute_gerber(self):
+        print("Gerbers")
+
         # the first pass performed is the one closest to the PCB traces
         t0 = time.time()
         og_list = []
@@ -385,7 +387,7 @@ class MachinePath:
             if to_drill[i]:
                 drilled_list.append(True)
                 c = g.geom.centroid
-                ds = get_poly_diameter(g.geom)
+                ds = get_poly_max_diameter(g.geom)
                 # with the diameter of the hole,
                 # it is possible to select the bit to be used for drilling
                 # among those available.
@@ -443,6 +445,8 @@ class MachinePath:
         return drilled_list
 
     def execute_profile(self):
+        print("Profile")
+
         # to compute the profile path, the external perimeter of the board need to be
         # detected. The perimeter of the geom that contains all the other geom
         # will be chose as profile perimeter.
@@ -522,24 +526,21 @@ class MachinePath:
         self.path = [((t_d, "profile"), path)]
 
     def execute_slot(self):
-        # to compute the profile path, the external perimeter of the board need to be
-        # detected. The perimeter of the geom that contains all the other geom
-        # will be chose as profile perimeter.
-        # If the external geom is unique its holes will be considered otherwise multiple external
-        # geoms are present, their perimeters will be considered as contours of holes
+        print("Slot")
+        timeStart = time.time()
 
-        t0 = time.time()
-        og_list = []
-        prev_poly = [g.geom for g in self.geom_list]
-        td = self.cfg['tool_diameter'] * self.TD_COEFF
+        slot_list = []
+        slot_diameter = get_poly_max_diameter(self.geom_list[0].geom)
+        print(slot_diameter)
+
         # uniqueness check of the profile
         if len(self.geom_list) == 1:
             # unique profile
-            ext_path = offset_polygon(fill_holes_sh(self.geom_list[0].geom), self.cfg['margin'], shapely_poly=True)
+            ext_path = offset_polygon(self.geom_list[0].geom, self.cfg['margin'], shapely_poly=True)
             if ext_path is not None:
-                og_list.append(ext_path)
+                slot_list.append(ext_path)
         else:
-            # profile composed by multiple polygons
+            # slot composed by multiple polygons
             # to identify the external profile I calculate the areas of the bboxes of each polygon.
             # the polygon with the largest bbox will be the outer one.
             geoms = [g.geom for g in self.geom_list]
@@ -553,25 +554,24 @@ class MachinePath:
                     id = i + 1
 
             # id contains the index of the polygon with biggest bbox
-            # todo: check, are all the remaining polygons contained in the biggest one?
 
             ext_p = self.geom_list[id]
-            ext_path = offset_polygon(fill_holes_sh(ext_p.geom), self.cfg['margin'], shapely_poly=True)
+            ext_path = offset_polygon(ext_p.geom, self.cfg['margin'], shapely_poly = False)
             if ext_path is not None:
-                og_list.append(ext_path)
+                slot_list.append(ext_path)
 
             for i, g in enumerate(self.geom_list):
                 if i != id:
                     og = offset_polygon_holes(g, - (self.cfg['margin']))
                     if og is not None:
-                        og_list.append(og)
+                        slot_list.append(og)
 
-        t1 = time.time()
-        print("Path Generation Done in " + str(t1-t0) + " sec")
+        timeFinish = time.time()
+        print("Path Generation Done in " + str(timeFinish - timeStart) + " sec")
 
         # extracting linestring from the polygon path
         path = []
-        for g in og_list:
+        for g in slot_list:
             ex_path = g.exterior
             if ex_path.type == "LinearRing" or ex_path.type == "LineString":
                 path.append(ex_path)
@@ -579,24 +579,8 @@ class MachinePath:
                 if ex_path.type == "LinearRing" or ex_path.type == "LineString":
                     path.append(i)
 
-        # add taps
-        # based on the selected tap strategy
-        t = Gapper(path[0], self.cfg)
-        stl = t.get_available_strategies()
-        st = stl[self.cfg["taps_type"]]
-        print("Strategy")
-        print(st)
-        new_ext = t.add_taps_on_external_path(strategy=st)
-        path.pop(0)
-        path = new_ext + path
-
-        # todo: add the option to make tap for the perimeter holes
-        # I was thinking of something that would put at least 2 gaps
-        # in case the hole had a perimeter greater than a fixed parameter such as 30mm
-        # parameter could be set by GUI or settings page
-
-        t_d = self.cfg['tool_diameter']
-        self.path = [((t_d, "slot"), path)]
+        tool_dia = self.cfg['tool_diameter']
+        self.path = [((tool_dia, "slot"), path)]
 
     def _subpath_execute(self, ppg_list):
 

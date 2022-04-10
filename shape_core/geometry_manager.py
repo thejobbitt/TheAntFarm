@@ -1,4 +1,5 @@
 import time
+from numpy import equal
 import pyclipper as pc
 import shapely.geometry as shg
 from shapely.ops import unary_union, cascaded_union
@@ -64,7 +65,9 @@ def fill_holes_sh(poly_sh):
     return ret
 
 
-def get_poly_diameter(poly_sh):
+def get_poly_max_diameter(poly_sh):
+    # takes polygons
+    # return largest diameter list
     pl = [poly_sh]
     if poly_sh.geom_type == "MultiPolygon":
         pl = [p for p in poly_sh.geoms]
@@ -75,13 +78,14 @@ def get_poly_diameter(poly_sh):
         diameters.append(2.0 * r)
     return diameters
 
-
-def get_max_distance(c, pl):
-    d_max = 0.0
-    for p in pl:
-        d = c.distance(shg.Point(p))
-        d_max = max(d, d_max)
-    return d_max
+def get_max_distance(center, poly_coords):
+    # takes center point and polygon coords
+    # returns largest diameter
+    diameter_max = 0.0
+    for p in poly_coords:
+        diameter = center.distance(shg.Point(p))
+        diameter_max = max(diameter, diameter_max)
+    return diameter_max
 
 
 def offset_polygon(polyg, offset, shapely_poly=False):
