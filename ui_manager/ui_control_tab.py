@@ -1,6 +1,5 @@
 from PySide2.QtCore import Signal, Slot, QObject, QSize, Qt, QPersistentModelIndex
-from PySide2.QtWidgets import QFileDialog, QLineEdit, QRadioButton, QTableWidgetItem, \
-                              QHeaderView, QCheckBox, QButtonGroup
+from PySide2.QtWidgets import QFileDialog, QLineEdit, QRadioButton, QHeaderView, QButtonGroup
 from PySide2.QtGui import QIcon
 from style_manager import StyleManager
 import os
@@ -24,7 +23,7 @@ class UiControlTab(QObject):
     precalc_gcode_s = Signal(str)
     select_gcode_s = Signal(str)
 
-    def __init__(self, ui, control_worker, serial_worker, ctrl_layer, app_settings, gcf_settings):
+    def __init__(self, ui, control_worker, serial_worker, ctrl_layer, settings):
         """
         Initialize ui elements of Control tab and connect signals coming and going to other classes/workers.
 
@@ -38,16 +37,17 @@ class UiControlTab(QObject):
             Serial thread worker object.
         ctrl_layer: VisualLayer
             VisualLayer object that contain the openGL canvas.
-        app_settings: SettingsHandler
-            Handler object that allows the access to the application settings.
+        settings: SettingsHandler
+            Handler object that allows the access to all the settings.
         """
         super(UiControlTab, self).__init__()
         self.ui = ui
         self.controlWo = control_worker
         self.serialWo = serial_worker
         self.ctrl_layer = ctrl_layer
-        self.app_settings = app_settings
-        self.gcf_settings = gcf_settings
+        self.app_settings = settings.app_settings
+        self.gcf_settings = settings.gcf_settings
+        self.machine_settings = settings.machine_settings
 
         self.holding_status = False
         self.serial_connection_status = False
@@ -97,7 +97,7 @@ class UiControlTab(QObject):
         self.ui.soft_reset_tb.clicked.connect(self.handle_soft_reset)
         self.ui.unlock_tb.clicked.connect(self.handle_unlock)
         self.ui.homing_tb.clicked.connect(self.handle_homing)
-        self.ui.tool_change_tb.clicked.connect(self.tool_change_start)
+        self.ui.tool_change_tb.clicked.connect(self.handle_tool_change_start)
         self.ui.zero_xy_pb.clicked.connect(self.handle_xy_0)
         self.ui.zero_x_pb.clicked.connect(self.handle_x_0)
         self.ui.zero_y_pb.clicked.connect(self.handle_y_0)
@@ -128,7 +128,11 @@ class UiControlTab(QObject):
         self.ui.abl_active_chb.stateChanged.connect(
             lambda: self.controlWo.set_abl_active(self.ui.abl_active_chb.isChecked()))
         self.ui.get_bbox_pb.clicked.connect(self.controlWo.get_boundary_box)
+        self.ui.x_min_dsb.valueChanged.connect(self.update_bbox_x_steps)
+        self.ui.x_max_dsb.valueChanged.connect(self.update_bbox_x_steps)
         self.ui.x_num_step_sb.valueChanged.connect(self.update_bbox_x_steps)
+        self.ui.y_min_dsb.valueChanged.connect(self.update_bbox_y_steps)
+        self.ui.y_max_dsb.valueChanged.connect(self.update_bbox_y_steps)
         self.ui.y_num_step_sb.valueChanged.connect(self.update_bbox_y_steps)
 
         self.ui.soft_reset_tb.setEnabled(False)
@@ -165,21 +169,34 @@ class UiControlTab(QObject):
         self.select_gcode_s.connect(self.controlWo.select_active_gcode)
         self.controlWo.update_gcode_s.connect(self.visualize_gcode)
 
+        self.init_xy_jog_step_value()
+        self.init_z_jog_step_value()
+
         self.init_serial_port_cb()
 
+        self.ui.z_min_dsb.setValue(self.machine_settings.probe_z_min)
+        self.ui.z_max_dsb.setValue(self.machine_settings.probe_z_max)
+        self.ui.z_min_dsb.valueChanged.connect(self.handle_z_min_changed)
+        self.ui.z_max_dsb.valueChanged.connect(self.handle_z_max_changed)
+
+    def init_xy_jog_step_value(self):
+        """ Initialize XY step and value ui fields. """
+        self.ui.xy_step_cb.setCurrentIndex(self.machine_settings.xy_step_idx)
+        self.xy_update_step()
+        self.ui.xy_step_val_dsb.setValue(self.machine_settings.xy_step_value)
         self.ui.xy_step_cb.currentTextChanged.connect(self.xy_update_step)
+        self.ui.xy_step_val_dsb.valueChanged.connect(self.xy_update_value)
+
+    def init_z_jog_step_value(self):
+        """ Initialize Z step and value ui fields. """
+        self.ui.z_step_cb.setCurrentIndex(self.machine_settings.z_step_idx)
+        self.z_update_step()
+        self.ui.z_step_val_dsb.setValue(self.machine_settings.z_step_value)
         self.ui.z_step_cb.currentTextChanged.connect(self.z_update_step)
-        self.ui.xy_step_val_dsb.setSingleStep(float(self.ui.xy_step_cb.currentText()))
-        self.ui.z_step_val_dsb.setSingleStep(float(self.ui.z_step_cb.currentText()))
+        self.ui.z_step_val_dsb.valueChanged.connect(self.z_update_value)
 
     def init_serial_port_cb(self):
-        """
-        Initialize the serial ports ui elements.
-
-        Returns
-        -------
-
-        """
+        """ Initialize the serial ports' ui elements. """
         self.handle_refresh_button()
 
     @Slot(list)
@@ -230,12 +247,12 @@ class UiControlTab(QObject):
             if self.holding_status:
                 self.holding_status = False
                 icon = QIcon()
-                icon.addFile(u":/resources/resources/icons/white-pause-multimedia-big-gross-symbol-lines.svg", QSize(), QIcon.Normal,
-                             QIcon.Off)
-                icon.addFile(u":/resources/resources/icons/gray-pause-multimedia-big-gross-symbol-lines.svg", QSize(), QIcon.Disabled,
-                             QIcon.Off)
-                icon.addFile(u":/resources/resources/icons/gray-pause-multimedia-big-gross-symbol-lines.svg", QSize(), QIcon.Disabled,
-                             QIcon.On)
+                icon.addFile(u":/resources/resources/icons/white-pause-multimedia-big-gross-symbol-lines.svg", QSize(),
+                             QIcon.Normal, QIcon.Off)
+                icon.addFile(u":/resources/resources/icons/gray-pause-multimedia-big-gross-symbol-lines.svg", QSize(),
+                             QIcon.Disabled, QIcon.Off)
+                icon.addFile(u":/resources/resources/icons/gray-pause-multimedia-big-gross-symbol-lines.svg", QSize(),
+                             QIcon.Disabled, QIcon.On)
                 self.ui.pause_resume_tb.setIcon(icon)
                 self.ui.pause_resume_tb.setIconSize(QSize(64, 64))
                 self.ui.pause_resume_tb.setToolButtonStyle(Qt.ToolButtonIconOnly)
@@ -398,26 +415,42 @@ class UiControlTab(QObject):
 
         self.ctrl_layer.set_gcode_visible(tag, visible)
 
+    def get_selected_file(self):
+        num_rows = self.ui.gcode_tw.rowCount()
+        checked_row = -1
+        for row in range(0, num_rows):
+            if self.ui.gcode_tw.cellWidget(row, 1).isChecked() and checked_row < 0:
+                checked_row = row
+        return checked_row
+
+    def disable_during_send(self):
+        self.ui.play_tb.setEnabled(False)
+        self.ui.stop_tb.setEnabled(True)
+        self.ui.unlock_tb.setEnabled(False)
+        self.ui.homing_tb.setEnabled(False)
+        self.ui.tool_change_tb.setEnabled(False)
+        self.enable_gcode_rb(False)
+
+    def enable_after_send(self):
+        self.ui.stop_tb.setEnabled(False)
+        self.ui.unlock_tb.setEnabled(True)
+        self.ui.homing_tb.setEnabled(True)
+        self.ui.tool_change_tb.setEnabled(True)
+        checked_row = self.get_selected_file()
+        if self.serial_connection_status and checked_row >= 0:
+            self.ui.play_tb.setEnabled(True)
+
     def play_send_file(self):
         if self.serial_connection_status:
-            num_rows = self.ui.gcode_tw.rowCount()
-            for row in range(0, num_rows):
-                if self.ui.gcode_tw.cellWidget(row, 1).isChecked():
-                    self.send_gcode_s.emit(self.ui.gcode_tw.cellWidget(row, 0).toolTip())
-                    self.ui.play_tb.setEnabled(False)
-                    self.ui.stop_tb.setEnabled(True)
-                    self.ui.unlock_tb.setEnabled(False)
-                    self.ui.homing_tb.setEnabled(False)
-                    self.enable_gcode_rb(False)
+            checked_row = self.get_selected_file()
+            if checked_row >= 0:
+                self.send_gcode_s.emit(self.ui.gcode_tw.cellWidget(checked_row, 0).toolTip())
+                self.disable_during_send()
 
     def stop_send_file(self):
         self.stop_gcode_s.emit()
         self.enable_gcode_rb(True)
-        self.ui.stop_tb.setEnabled(False)
-        self.ui.unlock_tb.setEnabled(True)
-        self.ui.homing_tb.setEnabled(True)
-        if self.serial_connection_status:
-            self.ui.play_tb.setEnabled(True)
+        self.enable_after_send()
 
     def pause_resume(self):
         self.pause_resume_gcode_s.emit()
@@ -440,7 +473,8 @@ class UiControlTab(QObject):
 
     @Slot(str)
     def update_console_text(self, new_text):
-        self.ui.serial_te.append(new_text)
+        pruned_text = new_text.strip()
+        self.ui.serial_te.append(pruned_text)
 
     def send_input(self):
         """Send input to the serial port."""
@@ -518,6 +552,9 @@ class UiControlTab(QObject):
             self.controller_connected_s.emit(True)
             self.ctrl_layer.create_pointer(coords=(0, 0, 0))
 
+            self.ui.get_tool_offset_pb.setEnabled(True)
+            self.ui.get_tool_change_pb.setEnabled(True)
+
     def act_on_disconnection(self):
         self.controlWo.reset_controller_status_s.emit()
         self.serial_connection_status = False
@@ -538,6 +575,9 @@ class UiControlTab(QObject):
         self.ui.tool_change_tb.setEnabled(False)
         self.controller_connected_s.emit(False)
         self.ctrl_layer.remove_pointer()
+
+        self.ui.get_tool_offset_pb.setEnabled(False)
+        self.ui.get_tool_change_pb.setEnabled(False)
 
     def handle_clear_terminal(self):
         self.ui.serial_te.clear()
@@ -560,9 +600,10 @@ class UiControlTab(QObject):
         logging.debug("Homing Command")
         self.ui_serial_send_s.emit("$H\n")
 
-    def tool_change_start(self):
+    def handle_tool_change_start(self):
         logger.debug("Tool change")
         self.controlWo.send_tool_change_s.emit()
+        self.disable_during_send()
 
     def handle_xy_0(self):
         logging.debug("XY = 0")
@@ -585,11 +626,17 @@ class UiControlTab(QObject):
         self.ui_serial_send_s.emit("G90 G0 X0 Y0\n")
 
     def z_update_step(self):
+        self.machine_settings.z_step_idx = self.ui.z_step_cb.currentIndex()
         new_step_str = self.ui.z_step_cb.currentText()
         new_step_fl = float(new_step_str)  # try-except for the cast? No, because cb is not editable, up to now.
         self.ui.z_step_val_dsb.setSingleStep(new_step_fl)
         self.ui.z_plus_1_pb.setText("+" + new_step_str)
         self.ui.z_minus_1_pb.setText("-" + new_step_str)
+
+    @Slot()
+    def z_update_value(self):
+        """ Update current value of Z STEP in the machine settings. """
+        self.machine_settings.z_step_value = self.ui.z_step_val_dsb.value()
 
     def handle_x_minus(self):
         logging.debug("X_minus Command")
@@ -642,11 +689,17 @@ class UiControlTab(QObject):
         self.ui_serial_send_s.emit("$J=G91 Z" + str(z_plus_val) + " F100000\n")
 
     def xy_update_step(self):
+        self.machine_settings.xy_step_idx = self.ui.xy_step_cb.currentIndex()
         new_step_str = self.ui.xy_step_cb.currentText()
         new_step_fl = float(new_step_str)  # try-except for the cast? No, because cb is not editable, up to now.
         self.ui.xy_step_val_dsb.setSingleStep(new_step_fl)
         self.ui.xy_plus_1_pb.setText("+" + new_step_str)
         self.ui.xy_minus_1_pb.setText("-" + new_step_str)
+
+    @Slot()
+    def xy_update_value(self):
+        """ Update current value of XY STEP in the machine settings. """
+        self.machine_settings.xy_step_value = self.ui.xy_step_val_dsb.value()
 
     def handle_xy_plus_1(self):
         xy_val = self.ui.xy_step_val_dsb.value() + self.ui.xy_step_val_dsb.singleStep()
@@ -658,9 +711,7 @@ class UiControlTab(QObject):
 
     def handle_xy_div_10(self):
         xy_value = self.ui.xy_step_val_dsb.value()
-        xy_value /= 10.0  # self.xy_value / 10.0
-        # if not xy_value < 0.01:  # Minimum step is 0.01
-        self.ui.xy_step_val_dsb.setValue(xy_value)
+        self.ui.xy_step_val_dsb.setValue(round(xy_value/10.0, 2))
 
     def handle_xy_mul_10(self):
         xy_value = self.ui.xy_step_val_dsb.value()
@@ -676,18 +727,23 @@ class UiControlTab(QObject):
 
     def handle_z_div_10(self):
         z_value = self.ui.z_step_val_dsb.value()
-        self.ui.z_step_val_dsb.setValue(z_value/10.0)
+        self.ui.z_step_val_dsb.setValue(round(z_value/10.0, 2))
 
     def handle_z_mul_10(self):
         z_value = self.ui.z_step_val_dsb.value()
         self.ui.z_step_val_dsb.setValue(z_value*10.0)
 
+    def handle_z_min_changed(self):
+        self.machine_settings.probe_z_min = self.ui.z_min_dsb.value()
+
+    def handle_z_max_changed(self):
+        self.machine_settings.probe_z_max = self.ui.z_max_dsb.value()
+
     def handle_probe_cmd(self):
         logging.debug("Probe Command")
         # todo: fake parameters just to test probe
-        probe_z_max = -11.0
-        probe_feed_rate = 10.0
-        self.controlWo.cmd_probe(probe_z_max, probe_feed_rate)
+        probe_z_min = self.ui.z_min_dsb.value()
+        self.controlWo.cmd_probe(probe_z_min)
 
     def handle_auto_bed_levelling(self):
         logging.debug("Auto Bed Levelling Command")
@@ -718,10 +774,8 @@ class UiControlTab(QObject):
         logger.debug(bbox_t)
         self.ui.x_min_dsb.setValue(bbox_t[0])
         self.ui.y_min_dsb.setValue(bbox_t[1])
-        self.ui.z_min_dsb.setValue(-11.0)
         self.ui.x_max_dsb.setValue(bbox_t[3])
         self.ui.y_max_dsb.setValue(bbox_t[4])
-        self.ui.z_max_dsb.setValue(bbox_t[5])
         self.update_bbox_steps()
 
     def get_abl_inputs(self):

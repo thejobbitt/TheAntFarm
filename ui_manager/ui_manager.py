@@ -1,5 +1,4 @@
-from email.mime import application
-from PySide2.QtCore import Signal, Slot, QObject
+from PySide2.QtCore import Slot, QObject
 from PySide2.QtWidgets import QActionGroup
 from shape_core.visual_manager import VisualLayer
 
@@ -44,22 +43,21 @@ class UiManager(QObject):
         self.ui_load_layer_m = UiViewLoadLayerTab(main_win, control_worker, self.vis_layer, self.L_TAGS, self.L_NAMES,
                                                   self.settings.app_settings)
         self.ui_create_job_m = UiCreateJobLayerTab(ui, control_worker, self.vis_layer, self.L_TAGS, self.L_NAMES, self.settings.jobs_settings)
-        self.ui_control_tab_m = UiControlTab(ui, control_worker, serial_worker, self.ctrl_layer,
-                                             self.settings.app_settings, self.settings.gcf_settings)
+        self.ui_control_tab_m = UiControlTab(ui, control_worker, serial_worker, self.ctrl_layer, self.settings)
         self.ui_align_tab_m = UiAlignTab(ui, control_worker)
         self.ui_settings_tab_m = UiSettingsPreferencesTab(ui, control_worker, self.settings)
 
-        self.ui.prepare_widget.currentChanged.connect(self.from_load_to_create)
-        self.ui.actionHide_Show_Console.triggered.connect(self.hide_show_console)
-        # self.ui.actionSettings_Preferences.triggered.connect(self.hide_show_preferences_tab)
-        self.ui.actionSave_Settings.triggered.connect(self.save_all_settings)
+        self.ui_settings_tab_m.save_all_settings_s.connect(self.save_all_settings)
         self.ui.actionQuit.triggered.connect(self.quit_app)
+        
 
-        self.make_log_action_mutually_exclusive()
         self.apply_initial_window_settings(self.settings.app_settings)
 
     def apply_initial_window_settings(self, app_settings):
         """Apply initial window settings."""
+        self.ui.prepare_widget.currentChanged.connect(self.from_load_to_create)
+        self.ui.actionSave_Settings.triggered.connect(self.save_all_settings)
+        self.make_log_action_mutually_exclusive()
         if app_settings.win_maximized:
             self.main_win.showMaximized()
         self.main_win.move(app_settings.pos)  # Restore position
@@ -69,10 +67,14 @@ class UiManager(QObject):
             self.hide_show_preferences_tab()
         # Connect the hide show action after the initial state has been set.
         self.ui.actionSettings_Preferences.triggered.connect(self.hide_show_preferences_tab)
+
+        self.main_win.ui.actionHide_Show_Console.setChecked(app_settings.console_visibility)
+        self.hide_show_console()
+        # Connect the hide show console action after the initial state has been set.
+        self.ui.actionHide_Show_Console.triggered.connect(self.hide_show_console)
         self.main_win.ui.main_tab_widget.setCurrentIndex(app_settings.main_tab_index)
         self.main_win.ui.ctrl_tab_widget.setCurrentIndex(app_settings.ctrl_tab_index)
         self.main_win.ui.settings_sub_tab.setCurrentIndex(app_settings.settings_tab_index)
-        self.main_win.ui.actionHide_Show_Console.setChecked(app_settings.console_visibility)
 
     def quit_app(self):
         self.main_win.closeEvent('fileQuit')

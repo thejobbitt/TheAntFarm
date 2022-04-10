@@ -1351,7 +1351,7 @@ class Ui_MainWindow(object):
         self.droGridLayout = QGridLayout()
         self.droGridLayout.setObjectName(u"droGridLayout")
         self.droGridLayout.setHorizontalSpacing(0)
-        self.droGridLayout.setVerticalSpacing(6)
+        self.droGridLayout.setVerticalSpacing(2)
         self.droGridLayout.setContentsMargins(0, 0, 0, 0)
         self.zero_xy_pb = QPushButton(self.sender_tab)
         self.zero_xy_pb.setObjectName(u"zero_xy_pb")
@@ -1623,6 +1623,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_11 = QGridLayout()
         self.gridLayout_11.setObjectName(u"gridLayout_11")
+        self.gridLayout_11.setVerticalSpacing(0)
         self.label_6 = QLabel(self.sender_tab)
         self.label_6.setObjectName(u"label_6")
         sizePolicy8 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.MinimumExpanding)
@@ -2700,9 +2701,42 @@ class Ui_MainWindow(object):
         self.machine_settings_tab.setObjectName(u"machine_settings_tab")
         self.gridLayout_13 = QGridLayout(self.machine_settings_tab)
         self.gridLayout_13.setObjectName(u"gridLayout_13")
-        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.line_7 = QFrame(self.machine_settings_tab)
+        self.line_7.setObjectName(u"line_7")
+        self.line_7.setFrameShape(QFrame.HLine)
+        self.line_7.setFrameShadow(QFrame.Sunken)
 
-        self.gridLayout_13.addItem(self.verticalSpacer_3, 1, 0, 1, 1)
+        self.gridLayout_13.addWidget(self.line_7, 3, 0, 1, 1)
+
+        self.verticalSpacer_4 = QSpacerItem(20, 10, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.gridLayout_13.addItem(self.verticalSpacer_4, 4, 0, 1, 1)
+
+        self.line_10 = QFrame(self.machine_settings_tab)
+        self.line_10.setObjectName(u"line_10")
+        self.line_10.setFrameShape(QFrame.HLine)
+        self.line_10.setFrameShadow(QFrame.Sunken)
+
+        self.gridLayout_13.addWidget(self.line_10, 7, 0, 1, 1)
+
+        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.gridLayout_13.addItem(self.horizontalSpacer_4, 2, 1, 1, 1)
+
+        self.line_9 = QFrame(self.machine_settings_tab)
+        self.line_9.setObjectName(u"line_9")
+        self.line_9.setFrameShape(QFrame.HLine)
+        self.line_9.setFrameShadow(QFrame.Sunken)
+
+        self.gridLayout_13.addWidget(self.line_9, 5, 0, 1, 1)
+
+        self.feedrates_section_la = QLabel(self.machine_settings_tab)
+        self.feedrates_section_la.setObjectName(u"feedrates_section_la")
+        font3 = QFont()
+        font3.setPointSize(16)
+        self.feedrates_section_la.setFont(font3)
+
+        self.gridLayout_13.addWidget(self.feedrates_section_la, 6, 0, 1, 1, Qt.AlignHCenter|Qt.AlignVCenter)
 
         self.verticalLayout_5 = QVBoxLayout()
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
@@ -2710,6 +2744,34 @@ class Ui_MainWindow(object):
         self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
         self.gridLayout_14 = QGridLayout()
         self.gridLayout_14.setObjectName(u"gridLayout_14")
+        self.tool_offset_y_wpos_dsb = QDoubleSpinBox(self.machine_settings_tab)
+        self.tool_offset_y_wpos_dsb.setObjectName(u"tool_offset_y_wpos_dsb")
+        sizePolicy3.setHeightForWidth(self.tool_offset_y_wpos_dsb.sizePolicy().hasHeightForWidth())
+        self.tool_offset_y_wpos_dsb.setSizePolicy(sizePolicy3)
+        self.tool_offset_y_wpos_dsb.setMinimumSize(QSize(80, 0))
+        self.tool_offset_y_wpos_dsb.setMaximumSize(QSize(80, 16777215))
+        self.tool_offset_y_wpos_dsb.setFont(font)
+        self.tool_offset_y_wpos_dsb.setAlignment(Qt.AlignCenter)
+        self.tool_offset_y_wpos_dsb.setMinimum(-1000.000000000000000)
+        self.tool_offset_y_wpos_dsb.setMaximum(1000.000000000000000)
+        self.tool_offset_y_wpos_dsb.setSingleStep(0.100000000000000)
+
+        self.gridLayout_14.addWidget(self.tool_offset_y_wpos_dsb, 2, 2, 1, 1)
+
+        self.tool_offset_y_mpos_dsb = QDoubleSpinBox(self.machine_settings_tab)
+        self.tool_offset_y_mpos_dsb.setObjectName(u"tool_offset_y_mpos_dsb")
+        sizePolicy3.setHeightForWidth(self.tool_offset_y_mpos_dsb.sizePolicy().hasHeightForWidth())
+        self.tool_offset_y_mpos_dsb.setSizePolicy(sizePolicy3)
+        self.tool_offset_y_mpos_dsb.setMinimumSize(QSize(80, 0))
+        self.tool_offset_y_mpos_dsb.setMaximumSize(QSize(80, 16777215))
+        self.tool_offset_y_mpos_dsb.setFont(font)
+        self.tool_offset_y_mpos_dsb.setAlignment(Qt.AlignCenter)
+        self.tool_offset_y_mpos_dsb.setMinimum(-1000.000000000000000)
+        self.tool_offset_y_mpos_dsb.setMaximum(1000.000000000000000)
+        self.tool_offset_y_mpos_dsb.setSingleStep(0.100000000000000)
+
+        self.gridLayout_14.addWidget(self.tool_offset_y_mpos_dsb, 1, 2, 1, 1)
+
         self.x_la = QLabel(self.machine_settings_tab)
         self.x_la.setObjectName(u"x_la")
         sizePolicy10.setHeightForWidth(self.x_la.sizePolicy().hasHeightForWidth())
@@ -2730,6 +2792,35 @@ class Ui_MainWindow(object):
 
         self.gridLayout_14.addWidget(self.y_la, 0, 2, 1, 1, Qt.AlignHCenter)
 
+        self.tool_probe_z_limit_dsb = QDoubleSpinBox(self.machine_settings_tab)
+        self.tool_probe_z_limit_dsb.setObjectName(u"tool_probe_z_limit_dsb")
+        sizePolicy3.setHeightForWidth(self.tool_probe_z_limit_dsb.sizePolicy().hasHeightForWidth())
+        self.tool_probe_z_limit_dsb.setSizePolicy(sizePolicy3)
+        self.tool_probe_z_limit_dsb.setMinimumSize(QSize(80, 0))
+        self.tool_probe_z_limit_dsb.setMaximumSize(QSize(80, 16777215))
+        self.tool_probe_z_limit_dsb.setFont(font)
+        self.tool_probe_z_limit_dsb.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
+        self.tool_probe_z_limit_dsb.setAlignment(Qt.AlignCenter)
+        self.tool_probe_z_limit_dsb.setMinimum(-1000.000000000000000)
+        self.tool_probe_z_limit_dsb.setMaximum(1000.000000000000000)
+        self.tool_probe_z_limit_dsb.setSingleStep(0.100000000000000)
+
+        self.gridLayout_14.addWidget(self.tool_probe_z_limit_dsb, 3, 3, 1, 1)
+
+        self.tool_offset_x_wpos_dsb = QDoubleSpinBox(self.machine_settings_tab)
+        self.tool_offset_x_wpos_dsb.setObjectName(u"tool_offset_x_wpos_dsb")
+        sizePolicy3.setHeightForWidth(self.tool_offset_x_wpos_dsb.sizePolicy().hasHeightForWidth())
+        self.tool_offset_x_wpos_dsb.setSizePolicy(sizePolicy3)
+        self.tool_offset_x_wpos_dsb.setMinimumSize(QSize(80, 0))
+        self.tool_offset_x_wpos_dsb.setMaximumSize(QSize(80, 16777215))
+        self.tool_offset_x_wpos_dsb.setFont(font)
+        self.tool_offset_x_wpos_dsb.setAlignment(Qt.AlignCenter)
+        self.tool_offset_x_wpos_dsb.setMinimum(-1000.000000000000000)
+        self.tool_offset_x_wpos_dsb.setMaximum(1000.000000000000000)
+        self.tool_offset_x_wpos_dsb.setSingleStep(0.100000000000000)
+
+        self.gridLayout_14.addWidget(self.tool_offset_x_wpos_dsb, 2, 1, 1, 1)
+
         self.z_la = QLabel(self.machine_settings_tab)
         self.z_la.setObjectName(u"z_la")
         sizePolicy10.setHeightForWidth(self.z_la.sizePolicy().hasHeightForWidth())
@@ -2740,95 +2831,85 @@ class Ui_MainWindow(object):
 
         self.gridLayout_14.addWidget(self.z_la, 0, 3, 1, 1, Qt.AlignHCenter)
 
-        self.tool_offset_la = QLabel(self.machine_settings_tab)
-        self.tool_offset_la.setObjectName(u"tool_offset_la")
-        sizePolicy10.setHeightForWidth(self.tool_offset_la.sizePolicy().hasHeightForWidth())
-        self.tool_offset_la.setSizePolicy(sizePolicy10)
-        self.tool_offset_la.setMinimumSize(QSize(130, 0))
-        self.tool_offset_la.setFont(font)
-        self.tool_offset_la.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
-
-        self.gridLayout_14.addWidget(self.tool_offset_la, 1, 0, 1, 1)
-
         self.tool_offset_x_mpos_dsb = QDoubleSpinBox(self.machine_settings_tab)
         self.tool_offset_x_mpos_dsb.setObjectName(u"tool_offset_x_mpos_dsb")
+        sizePolicy3.setHeightForWidth(self.tool_offset_x_mpos_dsb.sizePolicy().hasHeightForWidth())
+        self.tool_offset_x_mpos_dsb.setSizePolicy(sizePolicy3)
+        self.tool_offset_x_mpos_dsb.setMinimumSize(QSize(80, 0))
+        self.tool_offset_x_mpos_dsb.setMaximumSize(QSize(80, 16777215))
         self.tool_offset_x_mpos_dsb.setFont(font)
+        self.tool_offset_x_mpos_dsb.setAlignment(Qt.AlignCenter)
         self.tool_offset_x_mpos_dsb.setMinimum(-1000.000000000000000)
         self.tool_offset_x_mpos_dsb.setMaximum(1000.000000000000000)
         self.tool_offset_x_mpos_dsb.setSingleStep(0.100000000000000)
 
         self.gridLayout_14.addWidget(self.tool_offset_x_mpos_dsb, 1, 1, 1, 1)
 
-        self.tool_offset_y_mpos_dsb = QDoubleSpinBox(self.machine_settings_tab)
-        self.tool_offset_y_mpos_dsb.setObjectName(u"tool_offset_y_mpos_dsb")
-        self.tool_offset_y_mpos_dsb.setFont(font)
-        self.tool_offset_y_mpos_dsb.setMinimum(-1000.000000000000000)
-        self.tool_offset_y_mpos_dsb.setMaximum(1000.000000000000000)
-        self.tool_offset_y_mpos_dsb.setSingleStep(0.100000000000000)
+        self.tool_offset_la_2 = QLabel(self.machine_settings_tab)
+        self.tool_offset_la_2.setObjectName(u"tool_offset_la_2")
+        sizePolicy3.setHeightForWidth(self.tool_offset_la_2.sizePolicy().hasHeightForWidth())
+        self.tool_offset_la_2.setSizePolicy(sizePolicy3)
+        self.tool_offset_la_2.setMinimumSize(QSize(130, 0))
+        self.tool_offset_la_2.setMaximumSize(QSize(130, 16777215))
+        self.tool_offset_la_2.setFont(font)
+        self.tool_offset_la_2.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
 
-        self.gridLayout_14.addWidget(self.tool_offset_y_mpos_dsb, 1, 2, 1, 1)
+        self.gridLayout_14.addWidget(self.tool_offset_la_2, 2, 0, 1, 1)
 
         self.tool_offset_z_mpos_dsb = QDoubleSpinBox(self.machine_settings_tab)
         self.tool_offset_z_mpos_dsb.setObjectName(u"tool_offset_z_mpos_dsb")
+        sizePolicy3.setHeightForWidth(self.tool_offset_z_mpos_dsb.sizePolicy().hasHeightForWidth())
+        self.tool_offset_z_mpos_dsb.setSizePolicy(sizePolicy3)
+        self.tool_offset_z_mpos_dsb.setMinimumSize(QSize(80, 0))
+        self.tool_offset_z_mpos_dsb.setMaximumSize(QSize(80, 16777215))
         self.tool_offset_z_mpos_dsb.setFont(font)
+        self.tool_offset_z_mpos_dsb.setAlignment(Qt.AlignCenter)
         self.tool_offset_z_mpos_dsb.setMinimum(-1000.000000000000000)
         self.tool_offset_z_mpos_dsb.setMaximum(1000.000000000000000)
         self.tool_offset_z_mpos_dsb.setSingleStep(0.100000000000000)
 
         self.gridLayout_14.addWidget(self.tool_offset_z_mpos_dsb, 1, 3, 1, 1)
 
-        self.tool_offset_la_2 = QLabel(self.machine_settings_tab)
-        self.tool_offset_la_2.setObjectName(u"tool_offset_la_2")
-        sizePolicy10.setHeightForWidth(self.tool_offset_la_2.sizePolicy().hasHeightForWidth())
-        self.tool_offset_la_2.setSizePolicy(sizePolicy10)
-        self.tool_offset_la_2.setMinimumSize(QSize(130, 0))
-        self.tool_offset_la_2.setFont(font)
-        self.tool_offset_la_2.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
+        self.tool_offset_la = QLabel(self.machine_settings_tab)
+        self.tool_offset_la.setObjectName(u"tool_offset_la")
+        sizePolicy3.setHeightForWidth(self.tool_offset_la.sizePolicy().hasHeightForWidth())
+        self.tool_offset_la.setSizePolicy(sizePolicy3)
+        self.tool_offset_la.setMinimumSize(QSize(130, 0))
+        self.tool_offset_la.setMaximumSize(QSize(130, 16777215))
+        self.tool_offset_la.setFont(font)
+        self.tool_offset_la.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
 
-        self.gridLayout_14.addWidget(self.tool_offset_la_2, 2, 0, 1, 1)
-
-        self.tool_offset_x_wpos_dsb = QDoubleSpinBox(self.machine_settings_tab)
-        self.tool_offset_x_wpos_dsb.setObjectName(u"tool_offset_x_wpos_dsb")
-        self.tool_offset_x_wpos_dsb.setFont(font)
-        self.tool_offset_x_wpos_dsb.setMinimum(-1000.000000000000000)
-        self.tool_offset_x_wpos_dsb.setMaximum(1000.000000000000000)
-        self.tool_offset_x_wpos_dsb.setSingleStep(0.100000000000000)
-
-        self.gridLayout_14.addWidget(self.tool_offset_x_wpos_dsb, 2, 1, 1, 1)
-
-        self.tool_offset_y_wpos_dsb = QDoubleSpinBox(self.machine_settings_tab)
-        self.tool_offset_y_wpos_dsb.setObjectName(u"tool_offset_y_wpos_dsb")
-        self.tool_offset_y_wpos_dsb.setFont(font)
-        self.tool_offset_y_wpos_dsb.setMinimum(-1000.000000000000000)
-        self.tool_offset_y_wpos_dsb.setMaximum(1000.000000000000000)
-        self.tool_offset_y_wpos_dsb.setSingleStep(0.100000000000000)
-
-        self.gridLayout_14.addWidget(self.tool_offset_y_wpos_dsb, 2, 2, 1, 1)
+        self.gridLayout_14.addWidget(self.tool_offset_la, 1, 0, 1, 1)
 
         self.tool_offset_z_wpos_dsb = QDoubleSpinBox(self.machine_settings_tab)
         self.tool_offset_z_wpos_dsb.setObjectName(u"tool_offset_z_wpos_dsb")
+        sizePolicy3.setHeightForWidth(self.tool_offset_z_wpos_dsb.sizePolicy().hasHeightForWidth())
+        self.tool_offset_z_wpos_dsb.setSizePolicy(sizePolicy3)
+        self.tool_offset_z_wpos_dsb.setMinimumSize(QSize(80, 0))
+        self.tool_offset_z_wpos_dsb.setMaximumSize(QSize(80, 16777215))
         self.tool_offset_z_wpos_dsb.setFont(font)
+        self.tool_offset_z_wpos_dsb.setAlignment(Qt.AlignCenter)
         self.tool_offset_z_wpos_dsb.setMinimum(-1000.000000000000000)
         self.tool_offset_z_wpos_dsb.setMaximum(1000.000000000000000)
         self.tool_offset_z_wpos_dsb.setSingleStep(0.100000000000000)
 
         self.gridLayout_14.addWidget(self.tool_offset_z_wpos_dsb, 2, 3, 1, 1)
 
+        self.tool_probe_z_limit_la = QLabel(self.machine_settings_tab)
+        self.tool_probe_z_limit_la.setObjectName(u"tool_probe_z_limit_la")
+        sizePolicy3.setHeightForWidth(self.tool_probe_z_limit_la.sizePolicy().hasHeightForWidth())
+        self.tool_probe_z_limit_la.setSizePolicy(sizePolicy3)
+        self.tool_probe_z_limit_la.setMinimumSize(QSize(130, 0))
+        self.tool_probe_z_limit_la.setMaximumSize(QSize(130, 16777215))
+        self.tool_probe_z_limit_la.setFont(font)
+        self.tool_probe_z_limit_la.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
 
-        self.horizontalLayout_13.addLayout(self.gridLayout_14)
+        self.gridLayout_14.addWidget(self.tool_probe_z_limit_la, 3, 0, 1, 1)
 
-        self.verticalLayout_4 = QVBoxLayout()
-        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.label_3 = QLabel(self.machine_settings_tab)
-        self.label_3.setObjectName(u"label_3")
-        sizePolicy13 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
-        sizePolicy13.setHorizontalStretch(0)
-        sizePolicy13.setVerticalStretch(0)
-        sizePolicy13.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
-        self.label_3.setSizePolicy(sizePolicy13)
-        self.label_3.setMinimumSize(QSize(0, 1))
+        self.tool_probe_wm_pos_chb = QCheckBox(self.machine_settings_tab)
+        self.tool_probe_wm_pos_chb.setObjectName(u"tool_probe_wm_pos_chb")
 
-        self.verticalLayout_4.addWidget(self.label_3)
+        self.gridLayout_14.addWidget(self.tool_probe_wm_pos_chb, 1, 4, 1, 1, Qt.AlignHCenter)
 
         self.get_tool_offset_pb = QPushButton(self.machine_settings_tab)
         self.get_tool_offset_pb.setObjectName(u"get_tool_offset_pb")
@@ -2837,10 +2918,10 @@ class Ui_MainWindow(object):
         self.get_tool_offset_pb.setFont(font)
         self.get_tool_offset_pb.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
 
-        self.verticalLayout_4.addWidget(self.get_tool_offset_pb, 0, Qt.AlignVCenter)
+        self.gridLayout_14.addWidget(self.get_tool_offset_pb, 2, 4, 1, 1)
 
 
-        self.horizontalLayout_13.addLayout(self.verticalLayout_4)
+        self.horizontalLayout_13.addLayout(self.gridLayout_14)
 
 
         self.verticalLayout_5.addLayout(self.horizontalLayout_13)
@@ -2856,87 +2937,61 @@ class Ui_MainWindow(object):
         self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
         self.gridLayout_15 = QGridLayout()
         self.gridLayout_15.setObjectName(u"gridLayout_15")
-        self.tool_change_la = QLabel(self.machine_settings_tab)
-        self.tool_change_la.setObjectName(u"tool_change_la")
-        sizePolicy10.setHeightForWidth(self.tool_change_la.sizePolicy().hasHeightForWidth())
-        self.tool_change_la.setSizePolicy(sizePolicy10)
-        self.tool_change_la.setMinimumSize(QSize(130, 0))
-        self.tool_change_la.setFont(font)
-        self.tool_change_la.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
+        self.tool_change_z_mpos_dsb = QDoubleSpinBox(self.machine_settings_tab)
+        self.tool_change_z_mpos_dsb.setObjectName(u"tool_change_z_mpos_dsb")
+        sizePolicy3.setHeightForWidth(self.tool_change_z_mpos_dsb.sizePolicy().hasHeightForWidth())
+        self.tool_change_z_mpos_dsb.setSizePolicy(sizePolicy3)
+        self.tool_change_z_mpos_dsb.setMinimumSize(QSize(80, 0))
+        self.tool_change_z_mpos_dsb.setMaximumSize(QSize(80, 16777215))
+        self.tool_change_z_mpos_dsb.setFont(font)
+        self.tool_change_z_mpos_dsb.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
+        self.tool_change_z_mpos_dsb.setAlignment(Qt.AlignCenter)
+        self.tool_change_z_mpos_dsb.setMinimum(-1000.000000000000000)
+        self.tool_change_z_mpos_dsb.setMaximum(1000.000000000000000)
+        self.tool_change_z_mpos_dsb.setSingleStep(0.100000000000000)
 
-        self.gridLayout_15.addWidget(self.tool_change_la, 0, 0, 1, 1)
-
-        self.tool_change_x_mpos_dsb = QDoubleSpinBox(self.machine_settings_tab)
-        self.tool_change_x_mpos_dsb.setObjectName(u"tool_change_x_mpos_dsb")
-        self.tool_change_x_mpos_dsb.setFont(font)
-        self.tool_change_x_mpos_dsb.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
-        self.tool_change_x_mpos_dsb.setMinimum(-1000.000000000000000)
-        self.tool_change_x_mpos_dsb.setMaximum(1000.000000000000000)
-        self.tool_change_x_mpos_dsb.setSingleStep(0.100000000000000)
-
-        self.gridLayout_15.addWidget(self.tool_change_x_mpos_dsb, 0, 1, 1, 1)
+        self.gridLayout_15.addWidget(self.tool_change_z_mpos_dsb, 0, 4, 1, 1)
 
         self.tool_change_y_mpos_dsb = QDoubleSpinBox(self.machine_settings_tab)
         self.tool_change_y_mpos_dsb.setObjectName(u"tool_change_y_mpos_dsb")
+        sizePolicy3.setHeightForWidth(self.tool_change_y_mpos_dsb.sizePolicy().hasHeightForWidth())
+        self.tool_change_y_mpos_dsb.setSizePolicy(sizePolicy3)
+        self.tool_change_y_mpos_dsb.setMinimumSize(QSize(80, 0))
+        self.tool_change_y_mpos_dsb.setMaximumSize(QSize(80, 16777215))
         self.tool_change_y_mpos_dsb.setFont(font)
         self.tool_change_y_mpos_dsb.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
+        self.tool_change_y_mpos_dsb.setAlignment(Qt.AlignCenter)
         self.tool_change_y_mpos_dsb.setMinimum(-1000.000000000000000)
         self.tool_change_y_mpos_dsb.setMaximum(1000.000000000000000)
         self.tool_change_y_mpos_dsb.setSingleStep(0.100000000000000)
 
         self.gridLayout_15.addWidget(self.tool_change_y_mpos_dsb, 0, 2, 1, 1)
 
-        self.tool_change_z_mpos_dsb = QDoubleSpinBox(self.machine_settings_tab)
-        self.tool_change_z_mpos_dsb.setObjectName(u"tool_change_z_mpos_dsb")
-        self.tool_change_z_mpos_dsb.setFont(font)
-        self.tool_change_z_mpos_dsb.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
-        self.tool_change_z_mpos_dsb.setMinimum(-1000.000000000000000)
-        self.tool_change_z_mpos_dsb.setMaximum(1000.000000000000000)
-        self.tool_change_z_mpos_dsb.setSingleStep(0.100000000000000)
+        self.tool_change_x_mpos_dsb = QDoubleSpinBox(self.machine_settings_tab)
+        self.tool_change_x_mpos_dsb.setObjectName(u"tool_change_x_mpos_dsb")
+        sizePolicy3.setHeightForWidth(self.tool_change_x_mpos_dsb.sizePolicy().hasHeightForWidth())
+        self.tool_change_x_mpos_dsb.setSizePolicy(sizePolicy3)
+        self.tool_change_x_mpos_dsb.setMinimumSize(QSize(80, 0))
+        self.tool_change_x_mpos_dsb.setMaximumSize(QSize(80, 16777215))
+        self.tool_change_x_mpos_dsb.setFont(font)
+        self.tool_change_x_mpos_dsb.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
+        self.tool_change_x_mpos_dsb.setAlignment(Qt.AlignCenter)
+        self.tool_change_x_mpos_dsb.setMinimum(-1000.000000000000000)
+        self.tool_change_x_mpos_dsb.setMaximum(1000.000000000000000)
+        self.tool_change_x_mpos_dsb.setSingleStep(0.100000000000000)
 
-        self.gridLayout_15.addWidget(self.tool_change_z_mpos_dsb, 0, 3, 1, 1)
+        self.gridLayout_15.addWidget(self.tool_change_x_mpos_dsb, 0, 1, 1, 1)
 
-        self.tool_change_la_2 = QLabel(self.machine_settings_tab)
-        self.tool_change_la_2.setObjectName(u"tool_change_la_2")
-        sizePolicy10.setHeightForWidth(self.tool_change_la_2.sizePolicy().hasHeightForWidth())
-        self.tool_change_la_2.setSizePolicy(sizePolicy10)
-        self.tool_change_la_2.setFont(font)
-        self.tool_change_la_2.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
+        self.tool_change_la = QLabel(self.machine_settings_tab)
+        self.tool_change_la.setObjectName(u"tool_change_la")
+        sizePolicy3.setHeightForWidth(self.tool_change_la.sizePolicy().hasHeightForWidth())
+        self.tool_change_la.setSizePolicy(sizePolicy3)
+        self.tool_change_la.setMinimumSize(QSize(130, 0))
+        self.tool_change_la.setMaximumSize(QSize(130, 16777215))
+        self.tool_change_la.setFont(font)
+        self.tool_change_la.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
 
-        self.gridLayout_15.addWidget(self.tool_change_la_2, 1, 0, 1, 1)
-
-        self.tool_change_x_wpos_dsb = QDoubleSpinBox(self.machine_settings_tab)
-        self.tool_change_x_wpos_dsb.setObjectName(u"tool_change_x_wpos_dsb")
-        self.tool_change_x_wpos_dsb.setFont(font)
-        self.tool_change_x_wpos_dsb.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
-        self.tool_change_x_wpos_dsb.setMinimum(-1000.000000000000000)
-        self.tool_change_x_wpos_dsb.setMaximum(1000.000000000000000)
-        self.tool_change_x_wpos_dsb.setSingleStep(0.100000000000000)
-
-        self.gridLayout_15.addWidget(self.tool_change_x_wpos_dsb, 1, 1, 1, 1)
-
-        self.tool_change_y_wpos_dsb = QDoubleSpinBox(self.machine_settings_tab)
-        self.tool_change_y_wpos_dsb.setObjectName(u"tool_change_y_wpos_dsb")
-        self.tool_change_y_wpos_dsb.setFont(font)
-        self.tool_change_y_wpos_dsb.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
-        self.tool_change_y_wpos_dsb.setMinimum(-1000.000000000000000)
-        self.tool_change_y_wpos_dsb.setMaximum(1000.000000000000000)
-        self.tool_change_y_wpos_dsb.setSingleStep(0.100000000000000)
-
-        self.gridLayout_15.addWidget(self.tool_change_y_wpos_dsb, 1, 2, 1, 1)
-
-        self.tool_change_z_wpos_dsb = QDoubleSpinBox(self.machine_settings_tab)
-        self.tool_change_z_wpos_dsb.setObjectName(u"tool_change_z_wpos_dsb")
-        self.tool_change_z_wpos_dsb.setFont(font)
-        self.tool_change_z_wpos_dsb.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
-        self.tool_change_z_wpos_dsb.setMinimum(-1000.000000000000000)
-        self.tool_change_z_wpos_dsb.setMaximum(1000.000000000000000)
-        self.tool_change_z_wpos_dsb.setSingleStep(0.100000000000000)
-
-        self.gridLayout_15.addWidget(self.tool_change_z_wpos_dsb, 1, 3, 1, 1)
-
-
-        self.horizontalLayout_15.addLayout(self.gridLayout_15)
+        self.gridLayout_15.addWidget(self.tool_change_la, 0, 0, 1, 1)
 
         self.get_tool_change_pb = QPushButton(self.machine_settings_tab)
         self.get_tool_change_pb.setObjectName(u"get_tool_change_pb")
@@ -2945,21 +3000,142 @@ class Ui_MainWindow(object):
         self.get_tool_change_pb.setFont(font)
         self.get_tool_change_pb.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
 
-        self.horizontalLayout_15.addWidget(self.get_tool_change_pb)
+        self.gridLayout_15.addWidget(self.get_tool_change_pb, 0, 5, 1, 1)
+
+
+        self.horizontalLayout_15.addLayout(self.gridLayout_15)
 
 
         self.verticalLayout_5.addLayout(self.horizontalLayout_15)
 
 
-        self.gridLayout_13.addLayout(self.verticalLayout_5, 0, 0, 1, 1)
+        self.gridLayout_13.addLayout(self.verticalLayout_5, 2, 0, 1, 1)
 
-        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.line_8 = QFrame(self.machine_settings_tab)
+        self.line_8.setObjectName(u"line_8")
+        self.line_8.setFrameShape(QFrame.HLine)
+        self.line_8.setFrameShadow(QFrame.Sunken)
 
-        self.gridLayout_13.addItem(self.horizontalSpacer_4, 0, 1, 1, 1)
+        self.gridLayout_13.addWidget(self.line_8, 1, 0, 1, 1)
+
+        self.tool_change_section_la = QLabel(self.machine_settings_tab)
+        self.tool_change_section_la.setObjectName(u"tool_change_section_la")
+        self.tool_change_section_la.setFont(font3)
+
+        self.gridLayout_13.addWidget(self.tool_change_section_la, 0, 0, 1, 1, Qt.AlignHCenter)
+
+        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.gridLayout_13.addItem(self.verticalSpacer_3, 9, 0, 1, 1)
+
+        self.gridLayout_19 = QGridLayout()
+        self.gridLayout_19.setObjectName(u"gridLayout_19")
+        self.feedrate_z_dsb = QDoubleSpinBox(self.machine_settings_tab)
+        self.feedrate_z_dsb.setObjectName(u"feedrate_z_dsb")
+        self.feedrate_z_dsb.setMinimumSize(QSize(252, 0))
+        self.feedrate_z_dsb.setMaximumSize(QSize(252, 16777215))
+        self.feedrate_z_dsb.setFont(font)
+        self.feedrate_z_dsb.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
+        self.feedrate_z_dsb.setAlignment(Qt.AlignCenter)
+        self.feedrate_z_dsb.setMaximum(100000.000000000000000)
+        self.feedrate_z_dsb.setSingleStep(0.100000000000000)
+
+        self.gridLayout_19.addWidget(self.feedrate_z_dsb, 1, 1, 1, 1)
+
+        self.z_feedrate_la = QLabel(self.machine_settings_tab)
+        self.z_feedrate_la.setObjectName(u"z_feedrate_la")
+        sizePolicy13 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        sizePolicy13.setHorizontalStretch(0)
+        sizePolicy13.setVerticalStretch(0)
+        sizePolicy13.setHeightForWidth(self.z_feedrate_la.sizePolicy().hasHeightForWidth())
+        self.z_feedrate_la.setSizePolicy(sizePolicy13)
+        self.z_feedrate_la.setMinimumSize(QSize(130, 0))
+        self.z_feedrate_la.setMaximumSize(QSize(130, 16777215))
+        self.z_feedrate_la.setFont(font)
+        self.z_feedrate_la.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
+
+        self.gridLayout_19.addWidget(self.z_feedrate_la, 1, 0, 1, 1)
+
+        self.xy_feedrate_la = QLabel(self.machine_settings_tab)
+        self.xy_feedrate_la.setObjectName(u"xy_feedrate_la")
+        sizePolicy3.setHeightForWidth(self.xy_feedrate_la.sizePolicy().hasHeightForWidth())
+        self.xy_feedrate_la.setSizePolicy(sizePolicy3)
+        self.xy_feedrate_la.setMinimumSize(QSize(130, 0))
+        self.xy_feedrate_la.setMaximumSize(QSize(130, 16777215))
+        self.xy_feedrate_la.setFont(font)
+        self.xy_feedrate_la.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
+
+        self.gridLayout_19.addWidget(self.xy_feedrate_la, 0, 0, 1, 1)
+
+        self.feedrate_xy_dsb = QDoubleSpinBox(self.machine_settings_tab)
+        self.feedrate_xy_dsb.setObjectName(u"feedrate_xy_dsb")
+        sizePolicy3.setHeightForWidth(self.feedrate_xy_dsb.sizePolicy().hasHeightForWidth())
+        self.feedrate_xy_dsb.setSizePolicy(sizePolicy3)
+        self.feedrate_xy_dsb.setMinimumSize(QSize(252, 0))
+        self.feedrate_xy_dsb.setMaximumSize(QSize(252, 16777215))
+        self.feedrate_xy_dsb.setFont(font)
+        self.feedrate_xy_dsb.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
+        self.feedrate_xy_dsb.setAlignment(Qt.AlignCenter)
+        self.feedrate_xy_dsb.setMaximum(100000.000000000000000)
+        self.feedrate_xy_dsb.setSingleStep(0.100000000000000)
+
+        self.gridLayout_19.addWidget(self.feedrate_xy_dsb, 0, 1, 1, 1)
+
+        self.feedrate_probe_dsb = QDoubleSpinBox(self.machine_settings_tab)
+        self.feedrate_probe_dsb.setObjectName(u"feedrate_probe_dsb")
+        self.feedrate_probe_dsb.setMinimumSize(QSize(252, 0))
+        self.feedrate_probe_dsb.setMaximumSize(QSize(252, 16777215))
+        self.feedrate_probe_dsb.setFont(font)
+        self.feedrate_probe_dsb.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
+        self.feedrate_probe_dsb.setAlignment(Qt.AlignCenter)
+        self.feedrate_probe_dsb.setMaximum(100000.000000000000000)
+        self.feedrate_probe_dsb.setSingleStep(0.100000000000000)
+
+        self.gridLayout_19.addWidget(self.feedrate_probe_dsb, 2, 1, 1, 1)
+
+        self.probe_feedrate_la = QLabel(self.machine_settings_tab)
+        self.probe_feedrate_la.setObjectName(u"probe_feedrate_la")
+        sizePolicy3.setHeightForWidth(self.probe_feedrate_la.sizePolicy().hasHeightForWidth())
+        self.probe_feedrate_la.setSizePolicy(sizePolicy3)
+        self.probe_feedrate_la.setMinimumSize(QSize(130, 0))
+        self.probe_feedrate_la.setMaximumSize(QSize(130, 16777215))
+        self.probe_feedrate_la.setFont(font)
+        self.probe_feedrate_la.setLocale(QLocale(QLocale.English, QLocale.UnitedKingdom))
+
+        self.gridLayout_19.addWidget(self.probe_feedrate_la, 2, 0, 1, 1)
+
+        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.gridLayout_19.addItem(self.horizontalSpacer_6, 0, 2, 1, 1)
+
+        self.horizontalSpacer_7 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.gridLayout_19.addItem(self.horizontalSpacer_7, 1, 2, 1, 1)
+
+        self.horizontalSpacer_8 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.gridLayout_19.addItem(self.horizontalSpacer_8, 2, 2, 1, 1)
+
+
+        self.gridLayout_13.addLayout(self.gridLayout_19, 8, 0, 1, 1)
 
         self.settings_sub_tab.addTab(self.machine_settings_tab, "")
 
         self.verticalLayout_12.addWidget(self.settings_sub_tab)
+
+        self.horizontalLayout_16 = QHBoxLayout()
+        self.horizontalLayout_16.setObjectName(u"horizontalLayout_16")
+        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_16.addItem(self.horizontalSpacer_5)
+
+        self.save_settings_preferences_pb = QPushButton(self.settings_tab)
+        self.save_settings_preferences_pb.setObjectName(u"save_settings_preferences_pb")
+
+        self.horizontalLayout_16.addWidget(self.save_settings_preferences_pb)
+
+
+        self.verticalLayout_12.addLayout(self.horizontalLayout_16)
 
         self.main_tab_widget.addTab(self.settings_tab, "")
 
@@ -3089,7 +3265,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.main_tab_widget.setCurrentIndex(0)
+        self.main_tab_widget.setCurrentIndex(1)
         self.prepare_widget.setCurrentIndex(0)
         self.jobs_sw.setCurrentIndex(3)
         self.ctrl_tab_widget.setCurrentIndex(1)
@@ -3397,17 +3573,23 @@ class Ui_MainWindow(object):
         self.nc_top_layer_color_la.setText("")
         self.nc_bottom_layer_color_la.setText("")
         self.settings_sub_tab.setTabText(self.settings_sub_tab.indexOf(self.application_settings_tab), QCoreApplication.translate("MainWindow", u"Application Settings", None))
+        self.feedrates_section_la.setText(QCoreApplication.translate("MainWindow", u"FEEDRATES [mm/min]", None))
         self.x_la.setText(QCoreApplication.translate("MainWindow", u"X", None))
         self.y_la.setText(QCoreApplication.translate("MainWindow", u"Y", None))
         self.z_la.setText(QCoreApplication.translate("MainWindow", u"Z", None))
-        self.tool_offset_la.setText(QCoreApplication.translate("MainWindow", u"Tool Offset MPos", None))
-        self.tool_offset_la_2.setText(QCoreApplication.translate("MainWindow", u"Tool Offset WPos", None))
-        self.label_3.setText("")
+        self.tool_offset_la_2.setText(QCoreApplication.translate("MainWindow", u"Tool Probe WPos", None))
+        self.tool_offset_la.setText(QCoreApplication.translate("MainWindow", u"Tool Probe MPos", None))
+        self.tool_probe_z_limit_la.setText(QCoreApplication.translate("MainWindow", u"Tool Probe Z Limit", None))
+        self.tool_probe_wm_pos_chb.setText(QCoreApplication.translate("MainWindow", u"Working Position", None))
         self.get_tool_offset_pb.setText(QCoreApplication.translate("MainWindow", u"Get Tool Offset Position", None))
         self.tool_change_la.setText(QCoreApplication.translate("MainWindow", u"Tool Change MPos", None))
-        self.tool_change_la_2.setText(QCoreApplication.translate("MainWindow", u"Tool Change WPos", None))
         self.get_tool_change_pb.setText(QCoreApplication.translate("MainWindow", u"Get Tool Change Position", None))
+        self.tool_change_section_la.setText(QCoreApplication.translate("MainWindow", u"TOOL CHANGE", None))
+        self.z_feedrate_la.setText(QCoreApplication.translate("MainWindow", u"Z FEEDRATE", None))
+        self.xy_feedrate_la.setText(QCoreApplication.translate("MainWindow", u"XY FEEDRATE", None))
+        self.probe_feedrate_la.setText(QCoreApplication.translate("MainWindow", u"PROBE FEEDRATE", None))
         self.settings_sub_tab.setTabText(self.settings_sub_tab.indexOf(self.machine_settings_tab), QCoreApplication.translate("MainWindow", u"Machine Settings", None))
+        self.save_settings_preferences_pb.setText(QCoreApplication.translate("MainWindow", u"Save Settings/Preferences", None))
         self.main_tab_widget.setTabText(self.main_tab_widget.indexOf(self.settings_tab), QCoreApplication.translate("MainWindow", u"Settings/Preferences", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
         self.menuConsole.setTitle(QCoreApplication.translate("MainWindow", u"Console", None))
