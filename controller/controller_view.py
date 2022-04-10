@@ -1,4 +1,5 @@
 from PySide2.QtCore import QObject
+from numpy import equal
 from shape_core.pcb_manager import PcbObj
 from shape_core.path_manager import MachinePath
 from shape_core.gcode_manager import GCoder
@@ -15,25 +16,23 @@ class ViewController(QObject):
         self.pcb = PcbObj()
         self.settings = settings
 
-    def load_new_layer(self, layer, layer_path):
-        try:
-            grb_tags = self.pcb.GBR_KEYS
-            exc_tags = self.pcb.EXN_KEYS
-            if layer in grb_tags:
-                self.pcb.load_gerber(layer_path, layer)
-                loaded_layer = self.pcb.get_gerber_layer(layer)
-                return [loaded_layer, False]
-            if layer in exc_tags:
-                self.pcb.load_excellon(layer_path, layer)
-                loaded_layer = self.pcb.get_excellon_layer(layer)
-                return [loaded_layer, True]
-            if layer not in grb_tags:
-                logger.error("Layer not in Gerber Tags.")
-        except (AttributeError, ValueError, ZeroDivisionError, IndexError) as e:
-            logging.error(e, exc_info=True)
-        except Exception as e:
-            logger.error("Uncaught exception: %s", traceback.format_exc())
-        return [None, None]
+    def load_new_layer(self, layer, file_path):
+        # takes layer name and file path
+        # returns layer info and file type flag
+
+        grb_tags = self.pcb.GBR_KEYS
+        exc_tags = self.pcb.EXN_KEYS
+        if layer in grb_tags:
+            self.pcb.load_gerber(file_path, layer)
+            loaded_layer = self.pcb.get_gerber_layer(layer)
+            return [loaded_layer, False]
+        elif layer in exc_tags:
+            self.pcb.load_excellon(file_path, layer)
+            loaded_layer = self.pcb.get_excellon_layer(layer)
+            return [loaded_layer, True]
+        else:
+            logger.error("Layer not in Gerber or Excellon Tags.")
+            return [None, None]
 
     def generate_new_path(self, tag, cfg, machining_type):
         if machining_type == "gerber" or machining_type == "profile" or machining_type == "slot":

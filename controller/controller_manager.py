@@ -23,16 +23,16 @@ class ControllerWorker(QObject):
     serial_tx_available_s = Signal()             # Signal to send text to the serial
 
     update_probe_s = Signal(list)                # Signal to update probe value
-    send_abl_s = Signal(tuple, tuple)
-    update_abl_s = Signal(list)                  # Signal to update Auto-Bed-Levelling value
+    send_abl_s = Signal(tuple, tuple)            # Signal to start auto bed leveling
+    update_abl_s = Signal(list)                  # Signal to update auto bed leveling value
     update_bbox_s = Signal(tuple)
     update_gcode_s = Signal(str, list, bool, bool)
     gcode_vectorized_s = Signal(str)
 
     update_file_progress_s = Signal(float)
 
-    reset_controller_status_s = Signal()
-    stop_send_s = Signal()
+    reset_controller_status_s = Signal()         # Signal reset controller
+    stop_send_s = Signal()                       # Signal to stop
     send_tool_change_s = Signal()                # Signal to start the tool change procedure
 
     REMOTE_RX_BUFFER_MAX_SIZE = 128
@@ -115,10 +115,10 @@ class ControllerWorker(QObject):
     # ***************** VIEW related functions. ***************** #
 
     @Slot(str, str)
-    def load_new_layer(self, layer, layer_path):
-        [loaded_layer, exc_flag] = self.view_controller.load_new_layer(layer, layer_path)
+    def load_new_file(self, layer, file_path):
+        [loaded_layer, exc_hole_flag] = self.view_controller.load_new_layer(layer, file_path)
         if loaded_layer is not None:
-            self.update_layer_s.emit(loaded_layer, layer, layer_path, exc_flag)
+            self.update_layer_s.emit(loaded_layer, layer, file_path, exc_hole_flag)
 
     @Slot(str, Od, str)
     def generate_new_path(self, tag, cfg, machining_type):

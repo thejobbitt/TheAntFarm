@@ -16,7 +16,7 @@ class UiViewLoadLayerTab(QObject):
         super(UiViewLoadLayerTab, self).__init__()
         self.main_win = main_win
         self.ui = main_win.ui
-        self.controlWo = control_worker
+        self.ctlWrkr = control_worker
         self.vis_layer = vis_layer
         self.lay_tags = lay_tags
         self.lay_names = lay_names
@@ -54,30 +54,30 @@ class UiViewLoadLayerTab(QObject):
         self.ui.pushButton_4.clicked.connect(self.vis_layer.bottom_view)
 
         # Connect slot and signal
-        self.load_layer_s.connect(self.controlWo.load_new_layer)
-        self.controlWo.update_layer_s.connect(self.visualize_new_layer)
+        self.load_layer_s.connect(self.ctlWrkr.load_new_file)
+        self.ctlWrkr.update_layer_s.connect(self.visualize_new_layer)
 
         # Accepted file types
         gerber_extensions = "Gerber (*.gbr *.GBR *.gbl *.GBL *.gtl *.GTL)"
         excellon_extensions = "Excellon (*.xln *.XLN *.drl *.DRL)"
 
-        # Open file pushbutton event
+        # Open file pushbutton events
         self.ui.top_load_pb.clicked.connect(
-            lambda: self.load_gerber_file(self.lay_tags[0], "Load Top Gerber File", gerber_extensions))
+            lambda: self.load_file(self.lay_tags[0], "Load Top Gerber File", gerber_extensions))
         self.ui.bottom_load_pb.clicked.connect(
-            lambda: self.load_gerber_file(self.lay_tags[1], "Load Bottom Gerber File", gerber_extensions))
+            lambda: self.load_file(self.lay_tags[1], "Load Bottom Gerber File", gerber_extensions))
         self.ui.profile_load_pb.clicked.connect(
-            lambda: self.load_gerber_file(self.lay_tags[2], "Load Profile Gerber File", gerber_extensions))
+            lambda: self.load_file(self.lay_tags[2], "Load Profile Gerber File", gerber_extensions))
         self.ui.drill_load_pb.clicked.connect(
-            lambda: self.load_gerber_file(self.lay_tags[3], "Load Drill Excellon File", excellon_extensions))
+            lambda: self.load_file(self.lay_tags[3], "Load Drill Excellon File", excellon_extensions))
         self.ui.slot_load_pb.clicked.connect(
-            lambda: self.load_gerber_file(self.lay_tags[4], "Load Slot Gerber File", gerber_extensions))
+            lambda: self.load_file(self.lay_tags[4], "Load Slot Milling Gerber File", gerber_extensions))
         self.ui.no_copper_1_pb.clicked.connect(
-            lambda: self.load_gerber_file(self.lay_tags[5], "Load No Copper TOP Gerber File", gerber_extensions))
+            lambda: self.load_file(self.lay_tags[5], "Load No Copper TOP Gerber File", gerber_extensions))
         self.ui.no_copper_2_pb.clicked.connect(
-            lambda: self.load_gerber_file(self.lay_tags[6], "Load No Copper BOTTOM Gerber File", gerber_extensions))
+            lambda: self.load_file(self.lay_tags[6], "Load No Copper BOTTOM Gerber File", gerber_extensions))
        
-        # View checkbox event
+        # View checkbox events
         self.ui.top_view_chb.stateChanged.connect(
             lambda: self.set_layer_visible(self.lay_tags[0], self.ui.top_view_chb.isChecked()))
         self.ui.bottom_view_chb.stateChanged.connect(
@@ -105,15 +105,26 @@ class UiViewLoadLayerTab(QObject):
         self.ui.no_copper_2_le.hide()
         self.ui.no_copper_2_pb.hide()
 
-    def load_gerber_file(self, layer="top", load_text="Load File", extensions=""):
-        filters = extensions + ";;All files (*.*)"
-        load_file_path = QFileDialog.getOpenFileName(self.main_win, load_text, self.app_settings.layer_last_dir, filters)
-        if load_file_path[0]:
+    def load_file(self, layer = "top", load_text = "Load File", extensions = ""):
+        # open dialog to get filename with extension restrictions
+        file_type_filters = extensions + ";;All files (*.*)"
+        load_file_path = QFileDialog.getOpenFileName(self.main_win, 
+                                                    load_text, 
+                                                    self.app_settings.layer_last_dir, 
+                                                    file_type_filters)
+        # check for returned filename
+        if load_file_path[0] is not None:
+            logger.info("Loading " + load_file_path[0])
+            # clear the visualization for opened layer
             self.vis_layer.remove_layer(layer)
             self.vis_layer.remove_path(layer)
+            # update app settings
             self.app_settings.layer_last_dir = os.path.dirname(load_file_path[0])
-            logger.info("Loading " + load_file_path[0])
+            # emit signal
             self.load_layer_s.emit(layer, load_file_path[0])
+        else:
+            logger.info("File Not Opened")
+
 
     @Slot(Od, str, str, bool)
     def visualize_new_layer(self, loaded_layer, layer_tag, layer_path, holes):

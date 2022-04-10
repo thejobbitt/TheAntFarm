@@ -2,6 +2,8 @@
 import os
 import time
 import gerber as gbr
+from gerber.utils import detect_file_format
+from gerber.operations import to_metric
 import gerber.primitives
 # from gerber.render.cairo_backend import GerberCairoContext
 
@@ -62,7 +64,7 @@ class PcbObj:
             else:
                 pass
         print("[ERROR] GERBER NOT FOUND")
-        return None
+        return None 
 
     def load_gerber(self, path, tag):
         if tag not in self.GBR_KEYS:
@@ -80,16 +82,6 @@ class PcbObj:
 
         # self.render_layer(tmp)
 
-    @staticmethod
-    def dump_str(gerber_obj):
-        # used to FIX bug in pcb-tools that doesn't work properly
-        # tip: file conversion to metric before geom parser
-        print("Converting file units to metric")
-        string = ""
-        for stmt in gerber_obj.statements:
-            string += str(stmt.to_gerber(gerber_obj.settings)) + "\n"
-        return string
-
     def load_excellon(self, path, tag):
         if tag not in self.EXN_KEYS:
             print("[ERROR] EXCELLON TAG NOT RECOGNIZED")
@@ -105,6 +97,18 @@ class PcbObj:
             self.gerbers[tag] = gbr.loads(self.dump_str(tmp))
 
         #self.excellons[tag].to_metric()
+
+    @staticmethod
+    def dump_str(gerber_obj):
+        # used to FIX bug in pcb-tools that doesn't work properly
+        # tip: file conversion to metric before geom parser
+        print("Converting file units to metric")
+        string = ""
+        for stmt in gerber_obj.statements:
+            string += str(stmt.to_gerber(gerber_obj.settings)) + "\n"
+        return string
+
+    
 
     # def render_layer(self, layer):
     #
@@ -123,7 +127,7 @@ class PcbObj:
     #     ctx.dump(os.path.join(os.path.dirname(__file__), 'outputs', outfile))
 
     def get_gerber_layer(self, tag):
-        print("Get Gerber Layer")
+        print("Getting Gerber Layer")
         start_time = time.time()
         g = self.get_gerber(tag)
         mp = []

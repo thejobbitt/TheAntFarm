@@ -1,3 +1,4 @@
+from email.mime import application
 from PySide2.QtCore import Signal, Slot, QObject
 from PySide2.QtWidgets import QActionGroup
 from shape_core.visual_manager import VisualLayer
@@ -74,7 +75,7 @@ class UiManager(QObject):
         self.main_win.ui.actionHide_Show_Console.setChecked(app_settings.console_visibility)
 
     def quit_app(self):
-        quit()
+        self.main_win.closeEvent('fileQuit')
 
     def save_all_settings(self):
         all_settings_od = {"jobs_settings": self.ui_create_job_m.get_all_settings()}

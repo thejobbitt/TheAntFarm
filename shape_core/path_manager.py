@@ -219,7 +219,7 @@ class MachinePath:
         self.path = None
 
     def load_cfg(self, cfg):
-        print("Cfg")
+        print("Cfg: ", end='')
         print(cfg)
         self.cfg = cfg
 
@@ -445,8 +445,6 @@ class MachinePath:
         return drilled_list
 
     def execute_profile(self):
-        print("Profile")
-
         # to compute the profile path, the external perimeter of the board need to be
         # detected. The perimeter of the geom that contains all the other geom
         # will be chose as profile perimeter.
@@ -494,7 +492,7 @@ class MachinePath:
                         og_list.append(og)
 
         t1 = time.time()
-        print("Path Generation Done in " + str(t1-t0) + " sec")
+        print("Profile Generation Done in " + str(t1-t0) + " sec")
 
         # extracting linestring from the polygon path
         path = []
@@ -511,8 +509,7 @@ class MachinePath:
         t = Gapper(path[0], self.cfg)
         stl = t.get_available_strategies()
         st = stl[self.cfg["taps_type"]]
-        print("Strategy")
-        print(st)
+        print("Tabs: " + st)
         new_ext = t.add_taps_on_external_path(strategy=st)
         path.pop(0)
         path = new_ext + path
