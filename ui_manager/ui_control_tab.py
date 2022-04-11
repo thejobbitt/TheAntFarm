@@ -4,6 +4,7 @@ from PySide2.QtGui import QIcon
 from style_manager import StyleManager
 import os
 import logging
+import app_resources_rc
 
 logger = logging.getLogger(__name__)
 

@@ -13,7 +13,7 @@ from ui_manager.ui_manager import UiManager
 from settings_manager.settings_manager import SettingsHandler
 from log_manager import LogHandler, FileLogHandler
 import logging.handlers
-
+import app_resources_rc
 
 pys2_path = os.path.dirname(sys.modules['PySide2'].__file__)
 if os.path.isdir(os.path.join(pys2_path, "Qt")):
