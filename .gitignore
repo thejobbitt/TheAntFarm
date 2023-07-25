@@ -5,8 +5,10 @@
 # Ingore the venv
 env/
 venv/
+.venv/
 
 # Files created by running
-app_logs/
+src/TheAntFarm/app_logs/
 gcode_temp_dir/
-configurations/
+src/TheAntFarm/configurations/
+src/TheAntFarm/gcode_temp_dir/
