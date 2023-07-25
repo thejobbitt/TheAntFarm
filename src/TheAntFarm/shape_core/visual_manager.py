@@ -118,8 +118,8 @@ class GLUTess:
 class VisualLayer:
 
     DELTA = 1
-    TOP_ORDER = {'drill': 1, 'profile': 2, 'slot': 3, 'top': 5, 'bottom': 6, 'nc_top': 4, 'nc_bottom': 7}
-    BTM_ORDER = {'drill': 1, 'profile': 2, 'slot': 3, 'top': 6, 'bottom': 5, 'nc_top': 7, 'nc_bottom': 4}
+    TOP_ORDER = {'drill': 1, 'profile': 2, 'top': 4, 'bottom': 5, 'nc_top': 3, 'nc_bottom': 6}
+    BTM_ORDER = {'drill': 1, 'profile': 2, 'top': 5, 'bottom': 4, 'nc_top': 6, 'nc_bottom': 3}
     POINTER_RADIUS = 0.5
     POINTER_TAG = "POINTER"
     POINTER_COLOR = "orange"

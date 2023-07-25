@@ -5,7 +5,6 @@ from style_manager import StyleManager
 from collections import OrderedDict as Od
 import os
 import logging
-import app_resources_rc
 
 logger = logging.getLogger(__name__)
 

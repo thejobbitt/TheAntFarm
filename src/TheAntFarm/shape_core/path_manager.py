@@ -3,7 +3,7 @@ import time
 from shapely.geometry import Polygon, LineString, MultiLineString, Point, MultiPoint
 from shapely.ops import substring
 from collections import OrderedDict
-from .geometry_manager import merge_polygons_path, offset_polygon, offset_polygon_holes, get_bbox_area_sh, fill_holes_sh, get_poly_max_diameter
+from .geometry_manager import merge_polygons_path, offset_polygon, offset_polygon_holes, get_bbox_area_sh, fill_holes_sh, get_poly_diameter
 from .path_optimizer import Optimizer
 import numpy as np
 
@@ -211,15 +211,13 @@ class MachinePath:
         elif machining_type == 'drill':
             # self.cfg = {'tool_diameter': 1.0, 'bits_diameter': [1.0, 0.8, 0.6, 0.4]}
             self.cfg = {'tool_diameter': None, 'bits_diameter': [0.8], 'optimize': False}
-        elif machining_type == 'slot':
-            self.cfg = {'tool_diameter': 1.0, 'margin': 0.1, 'taps_type': 3, 'taps_length': 1.0}
         else:
             self.cfg = {}
         self.type = machining_type
         self.path = None
 
     def load_cfg(self, cfg):
-        print("Cfg: ", end='')
+        print("Cfg")
         print(cfg)
         self.cfg = cfg
 
@@ -237,8 +235,6 @@ class MachinePath:
             self.execute_profile()
         elif self.type == 'pocketing':
             elabs = self.execute_pocketing()
-        elif self.type == 'slot':
-            self.execute_slot()
         elif self.type == 'drill':
             # if there is a valid pocketing tool
             # the pocketing process is performed
@@ -267,8 +263,6 @@ class MachinePath:
         return elabs
 
     def execute_gerber(self):
-        print("Gerbers")
-
         # the first pass performed is the one closest to the PCB traces
         t0 = time.time()
         og_list = []
@@ -387,7 +381,7 @@ class MachinePath:
             if to_drill[i]:
                 drilled_list.append(True)
                 c = g.geom.centroid
-                ds = get_poly_max_diameter(g.geom)
+                ds = get_poly_diameter(g.geom)
                 # with the diameter of the hole,
                 # it is possible to select the bit to be used for drilling
                 # among those available.
@@ -492,7 +486,7 @@ class MachinePath:
                         og_list.append(og)
 
         t1 = time.time()
-        print("Profile Generation Done in " + str(t1-t0) + " sec")
+        print("Path Generation Done in " + str(t1-t0) + " sec")
 
         # extracting linestring from the polygon path
         path = []
@@ -509,7 +503,8 @@ class MachinePath:
         t = Gapper(path[0], self.cfg)
         stl = t.get_available_strategies()
         st = stl[self.cfg["taps_type"]]
-        print("Tabs: " + st)
+        print("Strategy")
+        print(st)
         new_ext = t.add_taps_on_external_path(strategy=st)
         path.pop(0)
         path = new_ext + path
@@ -521,63 +516,6 @@ class MachinePath:
 
         t_d = self.cfg['tool_diameter']
         self.path = [((t_d, "profile"), path)]
-
-    def execute_slot(self):
-        print("Slot")
-        timeStart = time.time()
-
-        slot_list = []
-        slot_diameter = get_poly_max_diameter(self.geom_list[0].geom)
-        print(slot_diameter)
-
-        # uniqueness check of the profile
-        if len(self.geom_list) == 1:
-            # unique profile
-            ext_path = offset_polygon(self.geom_list[0].geom, self.cfg['margin'], shapely_poly=True)
-            if ext_path is not None:
-                slot_list.append(ext_path)
-        else:
-            # slot composed by multiple polygons
-            # to identify the external profile I calculate the areas of the bboxes of each polygon.
-            # the polygon with the largest bbox will be the outer one.
-            geoms = [g.geom for g in self.geom_list]
-            bba = get_bbox_area_sh(geoms.pop(0))
-            id = 0
-
-            for i, p in enumerate(geoms):
-                a = get_bbox_area_sh(p)
-                if a > bba:
-                    bba = a
-                    id = i + 1
-
-            # id contains the index of the polygon with biggest bbox
-
-            ext_p = self.geom_list[id]
-            ext_path = offset_polygon(ext_p.geom, self.cfg['margin'], shapely_poly = False)
-            if ext_path is not None:
-                slot_list.append(ext_path)
-
-            for i, g in enumerate(self.geom_list):
-                if i != id:
-                    og = offset_polygon_holes(g, - (self.cfg['margin']))
-                    if og is not None:
-                        slot_list.append(og)
-
-        timeFinish = time.time()
-        print("Path Generation Done in " + str(timeFinish - timeStart) + " sec")
-
-        # extracting linestring from the polygon path
-        path = []
-        for g in slot_list:
-            ex_path = g.exterior
-            if ex_path.type == "LinearRing" or ex_path.type == "LineString":
-                path.append(ex_path)
-            for i in g.interiors:
-                if ex_path.type == "LinearRing" or ex_path.type == "LineString":
-                    path.append(i)
-
-        tool_dia = self.cfg['tool_diameter']
-        self.path = [((tool_dia, "slot"), path)]
 
     def _subpath_execute(self, ppg_list):
 
